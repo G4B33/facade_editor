@@ -23,7 +23,15 @@ Randomizer, corruptor, and more for the game named Façade
 ## How to build
 
 - Open facade_editor.sln in Visual Studio
+- Open up NuGet Package Manager Console (Tools->NuGet Package Manager->Package Manager Console)
+- Paste these 2 commands:
+- NuGet\Install-Package NAudio -Version 2.1.0
+- NuGet\Install-Package NAudio.Vorbis -Version 1.5.0
 - Press F6
+
+If NuGet didn't work because it's missing default package source(VS 2022 bug?), go to Tools->Options->NuGet Package Manager->Package Sources, add this package source:
+- Name: nuget.org
+- Source: https://api.nuget.org/v3/index.json
 
 ## License
 
