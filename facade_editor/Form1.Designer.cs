@@ -79,10 +79,10 @@ namespace facade_editor
             this.dramaManagerCheckBox = new System.Windows.Forms.CheckBox();
             this.label10 = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.linkLabel2 = new System.Windows.Forms.LinkLabel();
             this.creditLabel = new System.Windows.Forms.Label();
             this.superSecretPictureBox = new System.Windows.Forms.PictureBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.linkLabel2 = new System.Windows.Forms.LinkLabel();
             this.tabPage2.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -493,6 +493,7 @@ namespace facade_editor
             // label3
             // 
             this.label3.AutoSize = true;
+            this.label3.ForeColor = System.Drawing.Color.Red;
             this.label3.Location = new System.Drawing.Point(6, 278);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(413, 13);
@@ -617,6 +618,17 @@ namespace facade_editor
             this.tabPage4.UseVisualStyleBackColor = true;
             this.tabPage4.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tabPage4_Click);
             // 
+            // linkLabel2
+            // 
+            this.linkLabel2.AutoSize = true;
+            this.linkLabel2.Location = new System.Drawing.Point(6, 12);
+            this.linkLabel2.Name = "linkLabel2";
+            this.linkLabel2.Size = new System.Drawing.Size(84, 13);
+            this.linkLabel2.TabIndex = 2;
+            this.linkLabel2.TabStop = true;
+            this.linkLabel2.Text = "Made by G4B33";
+            this.linkLabel2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel2_LinkClicked);
+            // 
             // creditLabel
             // 
             this.creditLabel.AutoSize = true;
@@ -633,17 +645,6 @@ namespace facade_editor
             this.superSecretPictureBox.Size = new System.Drawing.Size(100, 50);
             this.superSecretPictureBox.TabIndex = 0;
             this.superSecretPictureBox.TabStop = false;
-            // 
-            // linkLabel2
-            // 
-            this.linkLabel2.AutoSize = true;
-            this.linkLabel2.Location = new System.Drawing.Point(6, 12);
-            this.linkLabel2.Name = "linkLabel2";
-            this.linkLabel2.Size = new System.Drawing.Size(84, 13);
-            this.linkLabel2.TabIndex = 2;
-            this.linkLabel2.TabStop = true;
-            this.linkLabel2.Text = "Made by G4B33";
-            this.linkLabel2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel2_LinkClicked);
             // 
             // Form1
             // 
