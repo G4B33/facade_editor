@@ -42,6 +42,7 @@ namespace facade_editor
                 pathTextbox.Text = path;
                 try
                 {
+                    checkProgramFilesFolder();
                     checkAdvancedSettings();
                     await GenerateBackup();
                 }
@@ -64,25 +65,46 @@ namespace facade_editor
 
         public async void randomizeButton_Click(object sender, EventArgs e)
         {
-            disableButtons();
-            if (soundsCheckBox.Checked || texturesTextBox.Checked || cursorsCheckBox.Checked || animationsCheckBox.Checked)
+            disableButtonsAndStuff();
+            if (soundsCheckBox.Checked || texturesCheckBox.Checked || cursorsCheckBox.Checked || animationsCheckBox.Checked)
             {
+                removeTempFiles();
                 if (soundsCheckBox.Checked) await randomizeSounds();
-                if (texturesTextBox.Checked) await randomizeTextures();
+                if (texturesCheckBox.Checked) await randomizeTextures();
                 if (cursorsCheckBox.Checked) await randomizeCursors();
-                if (animationsCheckBox.Checked) await randomizeAnimations();
+                if (animationsCheckBox.Checked && animationsHardCorruptionCheckBox.Checked)
+                    await randomizeAnimationsHard();
+                if(animationsCheckBox.Checked && !animationsHardCorruptionCheckBox.Checked)
+                {
+                    await randomizeAnimations("grace");
+                    await randomizeAnimations("trip");
+                }
+
             }
             else MessageBox.Show("You need to select what you want to randomize with the checkboxes first.", "Wait", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            enableButtons();
+            enableButtonsAndStuff();
+        }
+
+        void removeTempFiles() //if the program shuts down while working, this removes any temp files
+        {
+            try
+            {
+                if (Directory.Exists(path + "Sounds_r")) Directory.Delete(path + "Sounds_r");
+                if (Directory.Exists(path + "textures_r")) Directory.Delete(path + "textures_r");
+                if (Directory.Exists(path + "cursors_r")) Directory.Delete(path + "cursors_r");
+                if (Directory.Exists(path + "animation_r")) Directory.Delete(path + "animation_r");
+                if (Directory.Exists(path + "temp_sounds")) Directory.Delete(path + "temp_sounds");
+            }
+            catch { }
         }
         private async void restoreButton_Click(object sender, EventArgs e)
         {
-            disableButtons();
-            if (soundsCheckBox.Checked || texturesTextBox.Checked || cursorsCheckBox.Checked || animationsCheckBox.Checked)
+            disableButtonsAndStuff();
+            if (soundsCheckBox.Checked || texturesCheckBox.Checked || cursorsCheckBox.Checked || animationsCheckBox.Checked)
                 await Restore();
             else
                 MessageBox.Show("You need to select what you want to restore with the checkboxes first.", "Wait");
-            enableButtons();
+            enableButtonsAndStuff();
         }
         async Task Restore()
         {
@@ -93,9 +115,9 @@ namespace facade_editor
                     if (soundsCheckBox.Checked)
                     {
                         UpdateUI("", "Restoring sounds..");
-                        CopyFilesRecursively(path + @"Backup\Sounds", path + @"Sounds", true);
+                        CopyFilesRecursively(path + @"Backup\Sounds", path + @"Sounds", "restore");
                     }
-                    if (texturesTextBox.Checked)
+                    if (texturesCheckBox.Checked)
                     {
                         UpdateUI("", "Restoring textures..");
                         try
@@ -109,17 +131,17 @@ namespace facade_editor
                         }
                         catch { }
 
-                        CopyFilesRecursively(path + @"Backup\textures", path + @"textures", true);
+                        CopyFilesRecursively(path + @"Backup\textures", path + @"textures", "restore");
                     }
                     if (cursorsCheckBox.Checked)
                     {
                         UpdateUI("", "Restoring cursors..");
-                        CopyFilesRecursively(path + @"Backup\cursors", path + @"cursors", true);
+                        CopyFilesRecursively(path + @"Backup\cursors", path + @"cursors", "restore");
                     }
                     if (animationsCheckBox.Checked)
                     {
                         UpdateUI("", "Restoring animations..");
-                        CopyFilesRecursively(path + @"Backup\animation", path + @"animation", true);
+                        CopyFilesRecursively(path + @"Backup\animation", path + @"animation", "restore");
                     }
                     UpdateUI(" ", "Files restored.");
                 }
@@ -131,7 +153,7 @@ namespace facade_editor
 
 
         }
-        void disableButtons()
+        void disableButtonsAndStuff()
         {
             randomizeButton.Enabled = false;
             replaceButton.Enabled = false;
@@ -140,18 +162,48 @@ namespace facade_editor
             clearListButton.Enabled = false;
             restoreButton.Enabled = false;
             launchButton.Enabled = false;
+            soundsCheckBox.Enabled = false;
+            texturesCheckBox.Enabled = false;
+            cursorsCheckBox.Enabled = false;
+            animationsCheckBox.Enabled = false;
+            dontUseFilesFromBackupRadioButton.Enabled = false;
+            useBackupFilesRadioButton.Enabled = false;
+            lettersTextureIntactCheckBox.Enabled = false;
+            animationsHardCorruptionCheckBox.Enabled = false;
+            graceCheckBox.Enabled = false;
+            tripCheckBox.Enabled = false;
+            globalCheckBox.Enabled = false;
+            chanceCheckBox.Enabled = false;
+            chanceTextBox.Enabled = false;
         }
-        void enableButtons()
+        void enableButtonsAndStuff()
         {
             randomizeButton.Enabled = true;
             replaceButton.Enabled = true;
             browseButton.Enabled = true;
             replaceBrowseButton.Enabled = true;
             clearListButton.Enabled = true;
-            if (useBackupFilesRadioButton.Enabled)
+            if (Directory.Exists(path + "Backup"))
                 restoreButton.Enabled = true;
             if (javaDebugCheckBox.Checked)
                 launchButton.Enabled = true;
+            soundsCheckBox.Enabled = true;
+            texturesCheckBox.Enabled = true;
+            cursorsCheckBox.Enabled = true;
+            animationsCheckBox.Enabled = true;
+            dontUseFilesFromBackupRadioButton.Enabled = true;
+            if (Directory.Exists(path + "Backup"))
+            useBackupFilesRadioButton.Enabled = true;
+            if (texturesCheckBox.Checked)
+                lettersTextureIntactCheckBox.Enabled = true;
+            if (animationsCheckBox.Checked)
+                animationsHardCorruptionCheckBox.Enabled = true;
+            graceCheckBox.Enabled = true;
+            tripCheckBox.Enabled = true;
+            globalCheckBox.Enabled = true;
+            chanceCheckBox.Enabled = true;
+            if (chanceCheckBox.Checked)
+                chanceTextBox.Enabled = true;
         }
         async Task GenerateBackup()
         {
@@ -161,23 +213,23 @@ namespace facade_editor
                 if (!Directory.Exists(path + @"Backup"))
                 {
                     UpdateUI("", "Backup not found");
-                    if (MessageBox.Show(@"Do you want to generate a backup? You can use those original files to restore later. The backup will be saved at Facade\util\sources\facade\Backup.", "Backup is very recommended", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    if (MessageBox.Show(@"Do you want to generate a backup? You can use those original files to restore later. The backup will be saved at Facade\util\sources\facade\Backup. It is very recommended to make one, especially if the program shuts down unexpectedly while working.", "Backup is very recommended", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                     {
-                        disableButtons();
+                        disableButtonsAndStuff();
                         await Task.Run(() =>
                         {
                             if (!Directory.Exists(path + @"Backup\animation")) Directory.CreateDirectory(path + @"Backup\animation");
-                            CopyFilesRecursively(path + @"animation", path + @"Backup\animation", false);
+                            CopyFilesRecursively(path + @"animation", path + @"Backup\animation", "backup");
                             if (!Directory.Exists(path + @"Backup\cursors")) Directory.CreateDirectory(path + @"Backup\cursors");
-                            CopyFilesRecursively(path + @"cursors", path + @"Backup\cursors", false);
+                            CopyFilesRecursively(path + @"cursors", path + @"Backup\cursors", "backup");
                             if (!Directory.Exists(path + @"Backup\Sounds")) Directory.CreateDirectory(path + @"Backup\Sounds");
-                            CopyFilesRecursively(path + @"Sounds", path + @"Backup\Sounds", false);
+                            CopyFilesRecursively(path + @"Sounds", path + @"Backup\Sounds", "backup");
                             if (!Directory.Exists(path + @"Backup\textures")) Directory.CreateDirectory(path + @"Backup\textures");
-                            CopyFilesRecursively(path + @"textures", path + @"Backup\textures", false);
+                            CopyFilesRecursively(path + @"textures", path + @"Backup\textures", "backup");
                         });
                         UpdateUI(" ", "Backup generated.");
                         useBackupFilesRadioButton.Enabled = true;
-                        enableButtons();
+                        enableButtonsAndStuff();
                     }
 
                 }
@@ -185,7 +237,7 @@ namespace facade_editor
                 {
                     UpdateUI("", "Backup found.");
                     useBackupFilesRadioButton.Enabled = true;
-                    enableButtons();
+                    enableButtonsAndStuff();
                 }
 
             }
@@ -266,7 +318,7 @@ namespace facade_editor
 
 
         }
-        private void CopyFilesRecursively(string sourcePath, string targetPath, bool restoreOrBackup) //bool is only used to say restoring or backing up
+        private void CopyFilesRecursively(string sourcePath, string targetPath, string restoreOrBackup) 
         {
             //create all of the directories
             foreach (string dirPath in Directory.GetDirectories(sourcePath, "*", SearchOption.AllDirectories))
@@ -276,9 +328,10 @@ namespace facade_editor
             foreach (string newPath in Directory.GetFiles(sourcePath, "*.*", SearchOption.AllDirectories))
             {
                 File.Copy(newPath, newPath.Replace(sourcePath, targetPath), true);
-                if (restoreOrBackup)
+
+                if (restoreOrBackup=="restore")
                     UpdateUI("Restoring " + newPath + "..", "");
-                else
+                if (restoreOrBackup == "backup")
                     UpdateUI("Backing up " + newPath + "..", "");
             }
         }
@@ -335,8 +388,8 @@ namespace facade_editor
                         File.Copy(path + @"Sounds\global\globalsnd.txt", path + @"Sounds_r\global\globalsnd.txt");
                         File.Copy(path + @"Sounds\grace\gracesnd.txt", path + @"Sounds_r\grace\gracesnd.txt");
                         File.Copy(path + @"Sounds\trip\tripsnd.txt", path + @"Sounds_r\trip\tripsnd.txt");
-                        CopyFilesRecursively(path + @"Sounds\mp3_1", path + @"Sounds_r\mp3_1", false);
-                        CopyFilesRecursively(path + @"Sounds\mp3_2", path + @"Sounds_r\mp3_2", false);
+                        CopyFilesRecursively(path + @"Sounds\mp3_1", path + @"Sounds_r\mp3_1", "copy");
+                        CopyFilesRecursively(path + @"Sounds\mp3_2", path + @"Sounds_r\mp3_2", "copy");
                     }
 
                     Random random = new Random();
@@ -469,7 +522,7 @@ namespace facade_editor
 
 
         }
-        async Task randomizeAnimations()
+        async Task randomizeAnimationsHard()
         {
             i = 0;
             UpdateUI("", "Randomizing animations..");
@@ -491,14 +544,16 @@ namespace facade_editor
                             i++;
                         }
 
-
-                    if (!Directory.Exists(path + @"animation_r")) Directory.CreateDirectory(path + @"animation_r");
-                    if (!Directory.Exists(path + @"animation_r\grace")) Directory.CreateDirectory(path + @"animation_r\grace");
-                    if (!Directory.Exists(path + @"animation_r\trip")) Directory.CreateDirectory(path + @"animation_r\trip");
-                    if (!File.Exists(path + @"animation_r\grace\grace.aindex")) File.Copy(path + @"animation\grace\grace.aindex", path + @"animation_r\grace\grace.aindex");
-                    if (!File.Exists(path + @"animation_r\grace\graceScript.sbinary")) File.Copy(path + @"animation\grace\graceScript.sbinary", path + @"animation_r\grace\graceScript.sbinary");
-                    if (!File.Exists(path + @"animation_r\trip\trip.aindex")) File.Copy(path + @"animation\trip\trip.aindex", path + @"animation_r\trip\trip.aindex");
-                    if (!File.Exists(path + @"animation_r\trip\tripScript.sbinary")) File.Copy(path + @"animation\trip\tripScript.sbinary", path + @"animation_r\trip\tripScript.sbinary");
+                    if (dontUseFilesFromBackupRadioButton.Checked)
+                    {
+                        if (!Directory.Exists(path + @"animation_r")) Directory.CreateDirectory(path + @"animation_r");
+                        if (!Directory.Exists(path + @"animation_r\grace")) Directory.CreateDirectory(path + @"animation_r\grace");
+                        if (!Directory.Exists(path + @"animation_r\trip")) Directory.CreateDirectory(path + @"animation_r\trip");
+                        if (!File.Exists(path + @"animation_r\grace\grace.aindex")) File.Copy(path + @"animation\grace\grace.aindex", path + @"animation_r\grace\grace.aindex");
+                        if (!File.Exists(path + @"animation_r\grace\graceScript.sbinary")) File.Copy(path + @"animation\grace\graceScript.sbinary", path + @"animation_r\grace\graceScript.sbinary");
+                        if (!File.Exists(path + @"animation_r\trip\trip.aindex")) File.Copy(path + @"animation\trip\trip.aindex", path + @"animation_r\trip\trip.aindex");
+                        if (!File.Exists(path + @"animation_r\trip\tripScript.sbinary")) File.Copy(path + @"animation\trip\tripScript.sbinary", path + @"animation_r\trip\tripScript.sbinary");
+                    }
 
                     Random random = new Random();
                     int rndnumber;
@@ -539,52 +594,107 @@ namespace facade_editor
                 }
             });
 
+        }
+        async Task randomizeAnimations(string who)
+        {
+            i = 0;
+            UpdateUI("", "Randomizing "+ char.ToUpper(who[0]) + who.Substring(1) + "'s animations..");
 
-            /* i = 0;
-             UpdateUI("", "Replacing animations..");
-             await Task.Run(() =>
-             {
-                 foreach (string file in Directory.EnumerateFiles(path + @"animation\grace", "*.abinary", SearchOption.AllDirectories))
-                 {
-                     names[i] = file;
-                     UpdateUI(names[i], "");
-                     i++;
-                 }
+            await Task.Run(() =>
+            {
+                try
+                {
+                    if (dontUseFilesFromBackupRadioButton.Checked)
+                        foreach (string file in Directory.EnumerateFiles(path + @"animation\" + who, "*.abinary", SearchOption.AllDirectories))
+                        {
+                            names[i] = file;
+                            i++;
+                        }
+                    else
+                        foreach (string file in Directory.EnumerateFiles(path + @"Backup\animation\"+who, "*.abinary", SearchOption.AllDirectories))
+                        {
+                            names[i] = file;
+                            i++;
+                        }
+                    
+                    if (dontUseFilesFromBackupRadioButton.Checked && who == "grace")
+                    {
+                        if (!Directory.Exists(path + @"animation_r")) Directory.CreateDirectory(path + @"animation_r");
+                        if (!Directory.Exists(path + @"animation_r\grace")) Directory.CreateDirectory(path + @"animation_r\grace");
+                        if (!File.Exists(path + @"animation_r\grace\grace.aindex")) File.Move(path + @"animation\grace\grace.aindex", path + @"animation_r\grace\grace.aindex");
+                        if (!File.Exists(path + @"animation_r\grace\graceScript.sbinary")) File.Move(path + @"animation\grace\graceScript.sbinary", path + @"animation_r\grace\graceScript.sbinary");
+                    }
+                    if (dontUseFilesFromBackupRadioButton.Checked && who == "trip")
+                    {
+                        if (!Directory.Exists(path + @"animation_r")) Directory.CreateDirectory(path + @"animation_r");
+                        if (!Directory.Exists(path + @"animation_r\trip")) Directory.CreateDirectory(path + @"animation_r\trip");
+                        if (!File.Exists(path + @"animation_r\trip\trip.aindex")) File.Move(path + @"animation\trip\trip.aindex", path + @"animation_r\trip\trip.aindex");
+                        if (!File.Exists(path + @"animation_r\trip\tripScript.sbinary")) File.Move(path + @"animation\trip\tripScript.sbinary", path + @"animation_r\trip\tripScript.sbinary");
+                    }
+
+                    Random random = new Random();
+                    int rndnumber;
+                    int[] rnd = new int[i];
+                    string[] rndnames = new string[i];
+                    for (int j = 0; j < i; j++)
+                    {
+                        rndnumber = random.Next(1, i + 1);
+                        if (!rnd.Contains(rndnumber))
+                        {
+                            rnd[j] = rndnumber;
+                            rndnames[j] = names[rndnumber - 1].Replace("animation", "animation_r");
+                            if (dontUseFilesFromBackupRadioButton.Checked)
+                            {
+                                rndnames[j] = names[rndnumber - 1].Replace(@"animation", "animation_r");
+                                File.Move(names[j], rndnames[j]);
+                                UpdateUI(names[j].Remove(0, names[j].IndexOf(@"animation\") + 10) + " to " + rndnames[j].Remove(0, rndnames[j].IndexOf(@"animation_r\") + 12) + " " + (j + 1) + "/" + i, "");
+                            }
+                            else
+                            {
+                                rndnames[j] = names[rndnumber - 1].Replace(@"Backup\animation", "animation");
+                                File.Copy(names[j], rndnames[j], true);
+                                UpdateUI(names[j].Remove(0, names[j].IndexOf(@"animation\") + 10) + " to " + rndnames[j].Remove(0, rndnames[j].IndexOf(@"animation\") + 10) + " " + (j + 1) + "/" + i, "");
+                            }
+                        }
+                        else j--;
+                    }
 
 
-                 if (!Directory.Exists(path + @"animation_r")) Directory.CreateDirectory(path + @"animation_r");
-                 if (!Directory.Exists(path + @"animation_r\grace")) Directory.CreateDirectory(path + @"animation_r\grace");
-                 if (!File.Exists(path + @"animation_r\grace\grace.aindex")) File.Copy(path + @"animation\grace\grace.aindex", path + @"animation_r\grace\grace.aindex");
-                 if (!File.Exists(path + @"animation_r\grace\graceScript.sbinary")) File.Copy(path + @"animation\grace\graceScript.sbinary", path + @"animation_r\grace\graceScript.sbinary");
+                    if (dontUseFilesFromBackupRadioButton.Checked)
+                    {
+                        if (who == "grace")
+                            Directory.Move(path + @"animation\trip", path + @"animation_r\trip");
+                        if (who == "trip")
+                            Directory.Move(path + @"animation\grace", path + @"animation_r\grace");
+                        Directory.Delete(path + @"animation", true);
+                        Directory.Move(path + @"animation_r", path + @"animation");
+                    }
+                    UpdateUI(" ", "Animations randomized succesfully.");
+                }
+                catch (Exception ex)
+                {
+                    UpdateUI(" ", "Error randomizing animations: " + ex.Message);
+                }
+            });
 
-
-                 Random random = new Random();
-                 int rndnumber;
-                 int[] rnd = new int[i];
-                 string[] rndnames = new string[i];
-                 for (int j = 0; j < i; j++)
-                 {
-                     rndnumber = random.Next(1, i + 1);
-                     if (!rnd.Contains(rndnumber))
-                     {
-                         rnd[j] = rndnumber;
-                         rndnames[j] = names[rndnumber - 1].Replace("animation", "animation_r");
-                         File.Copy(names[j], rndnames[j]);
-                         UpdateUI(names[j] + " random " + rndnames[j] + " " + j + "/" + i, "");
-                     }
-                     else j--;
-                 }
-             });
-             UpdateUI("", "Animations replaced succesfully.");*/
         }
 
+        void checkProgramFilesFolder()
+        {
+            if (path.Contains("Program Files") && !IsCurrentUserInAdminGroup())
+            {
+                MessageBox.Show("Program Files folder detected, I might not have permission to write there without administrator rights.", "A little warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                warningLabel.Text = "I might not have permission to write to that folder. Please try to run this program with administrator rights\nor move the game if the program fails to run properly.";
+            }
+            else warningLabel.Text = "";
+        }
 
         private async void browseButton_Click(object sender, EventArgs e)
         {
             if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
             {
                 useBackupFilesRadioButton.Enabled = false;
-                disableButtons();
+                disableButtonsAndStuff();
                 if (folderBrowserDialog1.SelectedPath.Contains("Facade") || folderBrowserDialog1.SelectedPath.Contains("Façade"))
                 {
                     if (folderBrowserDialog1.SelectedPath.Contains(@"\util\sources\facade"))
@@ -597,17 +707,12 @@ namespace facade_editor
                         path = folderBrowserDialog1.SelectedPath + @"\util\sources\facade\";
 
                     pathTextbox.Text = path;
-                    if (path.Contains("Program Files") && !IsCurrentUserInAdminGroup())
-                    {
-                        MessageBox.Show("Program Files folder detected, I might not have permission to write there without administrator rights.", "A little warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        warningLabel.Text = "I might not have permission to write to that folder. Please try to run this program with administrator rights\nor move the game if the program fails to run properly.";
-                    }
-                    else warningLabel.Text = "";
+                    checkProgramFilesFolder();
                     await GenerateBackup();
                 }
 
                 else { warningLabel.Text = "Façade folder not detected. Are you sure you've selected the right folder?"; path = folderBrowserDialog1.SelectedPath + @"\"; pathTextbox.Text = path; }
-                enableButtons();
+                enableButtonsAndStuff();
                 try
                 {
                     File.WriteAllText("settings.cfg", path); // will write better saving method if that's ever needed
@@ -680,12 +785,15 @@ namespace facade_editor
 
         private async void replaceButton_Click(object sender, EventArgs e)
         {
-            disableButtons();
+            disableButtonsAndStuff();
             if (customSoundCount != 0)
+            {
+                removeTempFiles();
                 await replaceSounds();
+            }
             else
                 UpdateUIReplaceTab("", "No custom sound files");
-            enableButtons();
+            enableButtonsAndStuff();
         }
         async Task replaceSounds()
         {
@@ -823,7 +931,7 @@ namespace facade_editor
 
         private void texturesTextBox_CheckedChanged(object sender, EventArgs e)
         {
-            if (texturesTextBox.Checked) lettersTextureIntactCheckBox.Enabled = true;
+            if (texturesCheckBox.Checked) lettersTextureIntactCheckBox.Enabled = true;
             else lettersTextureIntactCheckBox.Enabled = false;
         }
 
@@ -1018,14 +1126,12 @@ namespace facade_editor
             }
         }
 
-        private void pathTextbox_KeyPress(object sender, KeyPressEventArgs e) =>
-            MessageBox.Show("Please use the browse button", "Stop");
+        private void pathTextbox_KeyPress(object sender, KeyPressEventArgs e) => MessageBox.Show("Please use the browse button", "Stop");
 
         private void button1_Click(object sender, EventArgs e)
         {
             try
             {
-
                 File.WriteAllText(path.Replace(@"util\sources\facade\", @"util\j2re1.4.2_06\bin\javb.bat"), "@echo off"); // the game will launch this empty bat file instead of java.exe, the program will launch the java.exe seperately with a batch file, so the java backend won't be hidden
                 string linesToWrite = "@echo off" + Environment.NewLine;
                 linesToWrite += path[0] + ":" + Environment.NewLine;
@@ -1136,6 +1242,17 @@ namespace facade_editor
                     launchButton.Enabled = true;
                 }
             }
+        }
+
+        private void animationsCheckBox_Click(object sender, EventArgs e)
+        {
+            animationsHardCorruptionCheckBox.Enabled = !animationsHardCorruptionCheckBox.Enabled;
+        }
+
+        private void animationsHardCorruptionCheckBox_Click(object sender, EventArgs e)
+        {
+            if (animationsHardCorruptionCheckBox.Checked)
+            MessageBox.Show("It is recommended to leave this off, sometimes you get funnier results, but most of the time Grace's and/or Trip's sprite just disappear","Hey",MessageBoxButtons.OK,MessageBoxIcon.Exclamation);
         }
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

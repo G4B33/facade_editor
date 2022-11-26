@@ -46,6 +46,7 @@ namespace facade_editor
             this.replaceBrowseButton = new System.Windows.Forms.Button();
             this.replaceButton = new System.Windows.Forms.Button();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.animationsHardCorruptionCheckBox = new System.Windows.Forms.CheckBox();
             this.label9 = new System.Windows.Forms.Label();
             this.restoreButton = new System.Windows.Forms.Button();
             this.useBackupFilesRadioButton = new System.Windows.Forms.RadioButton();
@@ -62,7 +63,7 @@ namespace facade_editor
             this.cursorsCheckBox = new System.Windows.Forms.CheckBox();
             this.browseButton = new System.Windows.Forms.Button();
             this.soundsCheckBox = new System.Windows.Forms.CheckBox();
-            this.texturesTextBox = new System.Windows.Forms.CheckBox();
+            this.texturesCheckBox = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage3 = new System.Windows.Forms.TabPage();
@@ -236,6 +237,7 @@ namespace facade_editor
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.animationsHardCorruptionCheckBox);
             this.tabPage1.Controls.Add(this.label9);
             this.tabPage1.Controls.Add(this.restoreButton);
             this.tabPage1.Controls.Add(this.useBackupFilesRadioButton);
@@ -252,7 +254,7 @@ namespace facade_editor
             this.tabPage1.Controls.Add(this.cursorsCheckBox);
             this.tabPage1.Controls.Add(this.browseButton);
             this.tabPage1.Controls.Add(this.soundsCheckBox);
-            this.tabPage1.Controls.Add(this.texturesTextBox);
+            this.tabPage1.Controls.Add(this.texturesCheckBox);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
@@ -260,6 +262,18 @@ namespace facade_editor
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Randomize";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // animationsHardCorruptionCheckBox
+            // 
+            this.animationsHardCorruptionCheckBox.AutoSize = true;
+            this.animationsHardCorruptionCheckBox.Enabled = false;
+            this.animationsHardCorruptionCheckBox.Location = new System.Drawing.Point(93, 201);
+            this.animationsHardCorruptionCheckBox.Name = "animationsHardCorruptionCheckBox";
+            this.animationsHardCorruptionCheckBox.Size = new System.Drawing.Size(99, 17);
+            this.animationsHardCorruptionCheckBox.TabIndex = 19;
+            this.animationsHardCorruptionCheckBox.Text = "Hard corruption";
+            this.animationsHardCorruptionCheckBox.UseVisualStyleBackColor = true;
+            this.animationsHardCorruptionCheckBox.Click += new System.EventHandler(this.animationsHardCorruptionCheckBox_Click);
             // 
             // label9
             // 
@@ -384,6 +398,7 @@ namespace facade_editor
             this.animationsCheckBox.TabIndex = 9;
             this.animationsCheckBox.Text = "Animations";
             this.animationsCheckBox.UseVisualStyleBackColor = true;
+            this.animationsCheckBox.Click += new System.EventHandler(this.animationsCheckBox_Click);
             // 
             // randomizeButton
             // 
@@ -425,16 +440,16 @@ namespace facade_editor
             this.soundsCheckBox.Text = "Sounds";
             this.soundsCheckBox.UseVisualStyleBackColor = true;
             // 
-            // texturesTextBox
+            // texturesCheckBox
             // 
-            this.texturesTextBox.AutoSize = true;
-            this.texturesTextBox.Location = new System.Drawing.Point(10, 153);
-            this.texturesTextBox.Name = "texturesTextBox";
-            this.texturesTextBox.Size = new System.Drawing.Size(67, 17);
-            this.texturesTextBox.TabIndex = 6;
-            this.texturesTextBox.Text = "Textures";
-            this.texturesTextBox.UseVisualStyleBackColor = true;
-            this.texturesTextBox.CheckedChanged += new System.EventHandler(this.texturesTextBox_CheckedChanged);
+            this.texturesCheckBox.AutoSize = true;
+            this.texturesCheckBox.Location = new System.Drawing.Point(10, 153);
+            this.texturesCheckBox.Name = "texturesCheckBox";
+            this.texturesCheckBox.Size = new System.Drawing.Size(67, 17);
+            this.texturesCheckBox.TabIndex = 6;
+            this.texturesCheckBox.Text = "Textures";
+            this.texturesCheckBox.UseVisualStyleBackColor = true;
+            this.texturesCheckBox.CheckedChanged += new System.EventHandler(this.texturesTextBox_CheckedChanged);
             // 
             // label1
             // 
@@ -704,7 +719,7 @@ namespace facade_editor
         private System.Windows.Forms.CheckBox cursorsCheckBox;
         private System.Windows.Forms.Button browseButton;
         private System.Windows.Forms.CheckBox soundsCheckBox;
-        private System.Windows.Forms.CheckBox texturesTextBox;
+        private System.Windows.Forms.CheckBox texturesCheckBox;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Button restoreButton;
@@ -726,6 +741,7 @@ namespace facade_editor
         private System.Windows.Forms.PictureBox superSecretPictureBox;
         private System.Windows.Forms.Label creditLabel;
         private System.Windows.Forms.LinkLabel linkLabel2;
+        private System.Windows.Forms.CheckBox animationsHardCorruptionCheckBox;
     }
 }
 
