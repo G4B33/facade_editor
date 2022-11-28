@@ -19,20 +19,22 @@ namespace facade_editor
 {
     public partial class Form1 : Form
     {
-        private readonly SynchronizationContext synchronizationContext; //this is needed for updating the UI while doing tasks on another thread
+        SynchronizationContext synchronizationContext; //this is needed for updating the UI while doing tasks on another thread
         string version = "1.0.0";
         public Form1()
         {
             InitializeComponent();
             synchronizationContext = SynchronizationContext.Current;
             initializeAndReadSettings();
-            if (IsCurrentUserInAdminGroup()) Text = "Façade editor (Admin rights) " + version;
-            else Text = "Façade editor " + version;
+            if (IsCurrentUserInAdminGroup())
+                Text = "Façade editor (Admin rights) " + version;
+            else 
+                Text = "Façade editor " + version;
 
         }
         string[] names = new string[100000]; //used for storing path for the files to randomize, yes I will change it to list or something else later
         string path = @""; //path to game
-        int i = 0;
+        int i = 0; //used for a lot of things, sorry will fix this sometime
 
         async void initializeAndReadSettings()
         {
@@ -53,7 +55,7 @@ namespace facade_editor
             }
 
         }
-        private bool IsCurrentUserInAdminGroup() //check if run as admin
+        bool IsCurrentUserInAdminGroup() //check if run as admin
         {
             using (WindowsIdentity identity = WindowsIdentity.GetCurrent())
             {
@@ -61,50 +63,68 @@ namespace facade_editor
                 return principal.IsInRole(WindowsBuiltInRole.Administrator);
             }
         }
+        bool isTheGameRunning()
+        {
+            Process[] proc = Process.GetProcessesByName("animEngineStarter");
+            if (proc.Length == 0)
+                return false; // no
+            else
+                return true; // yes
+        }
 
 
         public async void randomizeButton_Click(object sender, EventArgs e)
         {
-            disableButtonsAndStuff();
-            if (soundsCheckBox.Checked || texturesCheckBox.Checked || cursorsCheckBox.Checked || animationsCheckBox.Checked)
+            if (!isTheGameRunning())
             {
-                removeTempFiles();
-                if (soundsCheckBox.Checked) await randomizeSounds();
-                if (texturesCheckBox.Checked) await randomizeTextures();
-                if (cursorsCheckBox.Checked) await randomizeCursors();
-                if (animationsCheckBox.Checked && animationsHardCorruptionCheckBox.Checked)
-                    await randomizeAnimationsHard();
-                if(animationsCheckBox.Checked && !animationsHardCorruptionCheckBox.Checked)
+                disableButtonsAndStuff();
+                if (soundsCheckBox.Checked || texturesCheckBox.Checked || cursorsCheckBox.Checked || animationsCheckBox.Checked)
                 {
-                    await randomizeAnimations("grace");
-                    await randomizeAnimations("trip");
-                }
+                    removeTempFiles();
+                    if (soundsCheckBox.Checked) await randomizeSounds();
+                    if (texturesCheckBox.Checked) await randomizeTextures();
+                    if (cursorsCheckBox.Checked) await randomizeCursors();
+                    if (animationsCheckBox.Checked && animationsHardCorruptionCheckBox.Checked)
+                        await randomizeAnimationsHard();
+                    if (animationsCheckBox.Checked && !animationsHardCorruptionCheckBox.Checked)
+                    {
+                        await randomizeAnimations("grace");
+                        await randomizeAnimations("trip");
+                    }
 
+                }
+                else MessageBox.Show("You need to select what you want to randomize with the checkboxes first.", "Wait", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                enableButtonsAndStuff();
             }
-            else MessageBox.Show("You need to select what you want to randomize with the checkboxes first.", "Wait", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            enableButtonsAndStuff();
+            else
+                MessageBox.Show("The game is running, please close it first","Wait",MessageBoxButtons.OK,MessageBoxIcon.Stop);
         }
 
         void removeTempFiles() //if the program shuts down while working, this removes any temp files
         {
             try
             {
-                if (Directory.Exists(path + "Sounds_r")) Directory.Delete(path + "Sounds_r");
-                if (Directory.Exists(path + "textures_r")) Directory.Delete(path + "textures_r");
-                if (Directory.Exists(path + "cursors_r")) Directory.Delete(path + "cursors_r");
-                if (Directory.Exists(path + "animation_r")) Directory.Delete(path + "animation_r");
-                if (Directory.Exists(path + "temp_sounds")) Directory.Delete(path + "temp_sounds");
+                if (Directory.Exists(path + "Sounds_r")) Directory.Delete(path + "Sounds_r", true);
+                if (Directory.Exists(path + "textures_r")) Directory.Delete(path + "textures_r", true);
+                if (Directory.Exists(path + "cursors_r")) Directory.Delete(path + "cursors_r", true);
+                if (Directory.Exists(path + "animation_r")) Directory.Delete(path + "animation_r", true);
+                if (Directory.Exists(path + "temp_sounds")) Directory.Delete(path + "temp_sounds", true);
             }
             catch { }
         }
         private async void restoreButton_Click(object sender, EventArgs e)
         {
-            disableButtonsAndStuff();
-            if (soundsCheckBox.Checked || texturesCheckBox.Checked || cursorsCheckBox.Checked || animationsCheckBox.Checked)
-                await Restore();
+            if (!isTheGameRunning())
+            {
+                disableButtonsAndStuff();
+                if (soundsCheckBox.Checked || texturesCheckBox.Checked || cursorsCheckBox.Checked || animationsCheckBox.Checked)
+                    await Restore();
+                else
+                    MessageBox.Show("You need to select what you want to restore with the checkboxes first.", "Wait");
+                enableButtonsAndStuff();
+            }
             else
-                MessageBox.Show("You need to select what you want to restore with the checkboxes first.", "Wait");
-            enableButtonsAndStuff();
+                MessageBox.Show("The game is running, please close it first", "Wait", MessageBoxButtons.OK, MessageBoxIcon.Stop);
         }
         async Task Restore()
         {
@@ -318,7 +338,7 @@ namespace facade_editor
 
 
         }
-        private void CopyFilesRecursively(string sourcePath, string targetPath, string restoreOrBackup) 
+        void CopyFilesRecursively(string sourcePath, string targetPath, string restoreOrBackup) 
         {
             //create all of the directories
             foreach (string dirPath in Directory.GetDirectories(sourcePath, "*", SearchOption.AllDirectories))
@@ -785,15 +805,20 @@ namespace facade_editor
 
         private async void replaceButton_Click(object sender, EventArgs e)
         {
-            disableButtonsAndStuff();
-            if (customSoundCount != 0)
+            if (!isTheGameRunning())
             {
-                removeTempFiles();
-                await replaceSounds();
+                disableButtonsAndStuff();
+                if (customSoundCount != 0)
+                {
+                    removeTempFiles();
+                    await replaceSounds();
+                }
+                else
+                    UpdateUIReplaceTab("", "No custom sound files");
+                enableButtonsAndStuff();
             }
             else
-                UpdateUIReplaceTab("", "No custom sound files");
-            enableButtonsAndStuff();
+                MessageBox.Show("The game is running, please close it first", "Wait", MessageBoxButtons.OK, MessageBoxIcon.Stop);
         }
         async Task replaceSounds()
         {
@@ -885,7 +910,7 @@ namespace facade_editor
                 if (progress != "") label1.Text = progress; if (textboxmessage != "") replaceLogTextBox.AppendText(textboxmessage + Environment.NewLine);
             }), "");
         }
-        private void ConvertToWav(string inPath, string outPath)
+        void ConvertToWav(string inPath, string outPath)
         {
             if (inPath.Contains(".ogg"))
             {
@@ -920,7 +945,8 @@ namespace facade_editor
                 chanceTextBox.Enabled = true;
             else
             {
-                chanceTextBox.Enabled = false; chanceTextBox.Text = "100";
+                chanceTextBox.Enabled = false;
+                chanceTextBox.Text = "100";
             }
         }
 
@@ -931,8 +957,10 @@ namespace facade_editor
 
         private void texturesTextBox_CheckedChanged(object sender, EventArgs e)
         {
-            if (texturesCheckBox.Checked) lettersTextureIntactCheckBox.Enabled = true;
-            else lettersTextureIntactCheckBox.Enabled = false;
+            if (texturesCheckBox.Checked)
+                lettersTextureIntactCheckBox.Enabled = true;
+            else
+                lettersTextureIntactCheckBox.Enabled = false;
         }
 
 
@@ -1154,7 +1182,7 @@ namespace facade_editor
         }
 
 
-        public byte[] ReplaceBytes(byte[] src, byte[] search, byte[] repl)
+        byte[] ReplaceBytes(byte[] src, byte[] search, byte[] repl)
         {
             byte[] dst = null;
 
@@ -1178,7 +1206,7 @@ namespace facade_editor
 
             return dst;
         }
-        public int FindBytes(byte[] src, byte[] find)
+        int FindBytes(byte[] src, byte[] find)
         {
             int index = -1;
             int matchIndex = 0;

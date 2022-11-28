@@ -131,9 +131,6 @@
 general.map, general.rul files in the exe's directory. There's no way to reassamble them yet, but you can
 </value>
   </data>
-  <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>355, 17</value>
-  </metadata>
   <data name="label11.Text" xml:space="preserve">
     <value>Debug feature. It opens after you've opened the game. Use double click to open up variables in working memory,
 right click to modify their values. At "distribution", you can select how the story will progress.</value>
