@@ -5,7 +5,9 @@ Randomizer, corruptor, and more for the game named Façade
 
 - Randomize sounds, textures, cursors, animations
 - Replace(mix in) your own sound files (supports automatic downsampling and mp3, ogg, wav files) 
-- Decompile .bin, .map, .rul files (All of them are written in Java Jess rule language)
+- Decompile .bin, .map, .rul files, some even has dev comments (All of them are written in Java Jess rule language)
+![srcexample](./screenshots/srcexample.png)
+![srcexample2](./screenshots/srcexample2.png)
 - Enable never seen before(?) built in debug features like "Drama manager monitor" or "AI Log" and more
 ![dmm](./screenshots/dmm.png)
 ![console](./screenshots/console.png)
