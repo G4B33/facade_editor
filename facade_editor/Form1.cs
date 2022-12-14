@@ -45,7 +45,7 @@ namespace facade_editor
                 try
                 {
                     checkProgramFilesFolder();
-                    checkAdvancedSettings();
+                    checkSettings();
                     await GenerateBackup();
                 }
                 catch
@@ -54,6 +54,20 @@ namespace facade_editor
                 }
             }
 
+        }
+
+        async Task removeReadOnly() //I have to remove the read-only attributes, otherwise the program sometimes can't access them
+        {
+            try
+            {
+                await Task.Run(() =>
+                {
+                    var di = new DirectoryInfo(path);
+                    foreach (var file in di.GetFiles("*.txt", SearchOption.AllDirectories))
+                        file.Attributes &= ~FileAttributes.ReadOnly;
+                });
+            }
+            catch { }
         }
         bool IsCurrentUserInAdminGroup() //check if run as admin
         {
@@ -149,7 +163,7 @@ namespace facade_editor
                         try
                         {
                             var di = new DirectoryInfo(path + @"textures");
-                            foreach (var file in di.GetFiles("*", SearchOption.AllDirectories)) //I need to remove the read-only attribute of the pictures, otherwise the program can't access them
+                            foreach (var file in di.GetFiles("*", SearchOption.AllDirectories)) //I need to remove the read-only attributes , otherwise the program sometimes can't access them
                                 file.Attributes &= ~FileAttributes.ReadOnly;
                             var di2 = new DirectoryInfo(path + @"Backup\textures");
                             foreach (var file in di.GetFiles("*", SearchOption.AllDirectories))
@@ -705,7 +719,7 @@ namespace facade_editor
                 }
                 catch (Exception ex)
                 {
-                    UpdateUI(" ", "Error randomizing animations: " + ex.Message);
+                    UpdateUI(" ", "Error randomizing animations: " + ex.Message+"\nUse restore, then try again. If the problem persists, try to use the \"Use original files from backup option.\"");
                 }
             });
 
@@ -915,7 +929,7 @@ namespace facade_editor
                 }
                 try
                 {
-                    checkAdvancedSettings();
+                    checkSettings();
                 }
                 catch (Exception ex)
                 {
@@ -1145,8 +1159,9 @@ namespace facade_editor
             }
 
         }
-        void checkAdvancedSettings() //checking what advanced setting has been enabled before
+        void checkSettings() //checking what setting has been enabled before
         {
+            removeReadOnly();
             var fileCompare = File.ReadAllText(path.Replace("sources", "classes") + "main.class");
             var fileCompare2 = File.ReadAllText(@"files\main_orig.class");
             if (fileCompare == fileCompare2)
