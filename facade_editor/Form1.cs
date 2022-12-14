@@ -20,7 +20,7 @@ namespace facade_editor
     public partial class Form1 : Form
     {
         SynchronizationContext synchronizationContext; //this is needed for updating the UI while doing tasks on another thread
-        string version = "1.0.0";
+        string version = "1.0.1";
         public Form1()
         {
             InitializeComponent();
@@ -78,7 +78,7 @@ namespace facade_editor
             if (!isTheGameRunning())
             {
                 disableButtonsAndStuff();
-                if (soundsCheckBox.Checked || texturesCheckBox.Checked || cursorsCheckBox.Checked || animationsCheckBox.Checked)
+                if (soundsCheckBox.Checked || texturesCheckBox.Checked || cursorsCheckBox.Checked || animationsCheckBox.Checked || subtitlesCheckBox.Checked)
                 {
                     removeTempFiles();
                     if (soundsCheckBox.Checked) await randomizeSounds();
@@ -91,6 +91,12 @@ namespace facade_editor
                         await randomizeAnimations("grace");
                         await randomizeAnimations("trip");
                     }
+                    if (subtitlesCheckBox.Checked)
+                    {
+                        await randomizeSubtitles("grace");
+                        await randomizeSubtitles("trip");
+                    }
+
 
                 }
                 else MessageBox.Show("You need to select what you want to randomize with the checkboxes first.", "Wait", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -117,7 +123,7 @@ namespace facade_editor
             if (!isTheGameRunning())
             {
                 disableButtonsAndStuff();
-                if (soundsCheckBox.Checked || texturesCheckBox.Checked || cursorsCheckBox.Checked || animationsCheckBox.Checked)
+                if (soundsCheckBox.Checked || texturesCheckBox.Checked || cursorsCheckBox.Checked || animationsCheckBox.Checked || subtitlesCheckBox.Checked)
                     await Restore();
                 else
                     MessageBox.Show("You need to select what you want to restore with the checkboxes first.", "Wait");
@@ -162,6 +168,12 @@ namespace facade_editor
                     {
                         UpdateUI("", "Restoring animations..");
                         CopyFilesRecursively(path + @"Backup\animation", path + @"animation", "restore");
+                    }
+                    if (subtitlesCheckBox.Checked)
+                    {
+                        UpdateUI("", "Restoring subtitles..");
+                        File.Copy(path + @"Backup\graceScript.sbinary", path + @"animation\grace\graceScript.sbinary", true);
+                        File.Copy(path + @"Backup\tripScript.sbinary", path + @"animation\trip\tripScript.sbinary", true);
                     }
                     UpdateUI(" ", "Files restored.");
                 }
@@ -230,7 +242,7 @@ namespace facade_editor
             UpdateUI("", "Checking for backup..");
             try
             {
-                if (!Directory.Exists(path + @"Backup"))
+                if (!Directory.Exists(path + @"Backup\Sounds"))
                 {
                     UpdateUI("", "Backup not found");
                     if (MessageBox.Show(@"Do you want to generate a backup? You can use those original files to restore later. The backup will be saved at Facade\util\sources\facade\Backup. It is very recommended to make one, especially if the program shuts down unexpectedly while working.", "Backup is very recommended", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
@@ -698,6 +710,166 @@ namespace facade_editor
             });
 
         }
+        async Task randomizeSubtitles(string who)
+        {
+            UpdateUI("","Randomizing " + char.ToUpper(who[0]) + who.Substring(1) + "'s subtitles..");
+            if (!Directory.Exists(path + "Backup"))
+                Directory.CreateDirectory(path + "Backup");
+
+            if (!File.Exists(path + @"Backup\" + who + "Script.sbinary"))
+                File.Copy(path + @"animation\" + who + @"\" + who + "Script.sbinary", path + @"Backup\" + who + "Script.sbinary", true);
+            
+            await Task.Run(() =>
+            {
+                try
+                {
+                    if (who == "grace")
+                        readGraceSubtitles();
+                    if (who == "trip")
+                        readTripSubtitles();
+                    byte[] subFile = File.ReadAllBytes(path + @"Backup\" + who + "Script.sbinary");
+                    string[] subtitles = new string[10000];
+                    int[] indexes = new int[10000];
+                    int counter = 0;
+                    Random r = new Random();
+                    foreach (string line in File.ReadLines(path + who + "SubnonumberIndex.txt"))
+                    {
+                        subtitles[counter] = line.Remove(line.IndexOf('='));
+                        indexes[counter] = Convert.ToInt32(line.Remove(0, line.IndexOf('=') + 1));
+                        counter++;
+                    }
+                    for (int i = 0; i < counter; i++)
+                        try
+                        {
+                            subFile = ReplaceBytes(subFile, convert(Encoding.ASCII.GetBytes(subtitles[i])), convert(Encoding.ASCII.GetBytes(subtitles[r.Next(0, counter)])), indexes[i]);
+                        }
+                        catch (Exception e) { UpdateUI("", "error " + subtitles[i] + " " + e.Message); }
+                    File.WriteAllBytes(path + @"animation\" + who + @"\" + who + @"Script.sbinary", subFile);
+                    UpdateUI("", char.ToUpper(who[0]) + who.Substring(1) + "'s subtitles randomized succesfully.");
+                }
+                catch(Exception e)
+                {
+                    UpdateUI("","Error randomizing " + char.ToUpper(who[0]) + who.Substring(1) + "'s subtitles: " + e.Message);
+                }
+            });
+            try
+            {
+                if (File.Exists(path + @"graceScript.txt"))File.Delete(path + @"graceScript.txt");
+                if (File.Exists(path + @"tripScript.txt")) File.Delete(path + @"tripScript.txt");
+            }
+            catch { }
+        }
+         void readGraceSubtitles() // It's very, very jank, proceed with caution!
+        {
+
+            byte[] subFile = File.ReadAllBytes(path + @"Backup\graceScript.sbinary");
+            byte[] letters = new byte[] { 0x41, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47, 0x48, 0x49, 0x4a, 0x4b, 0x4c, 0x4d, 0x4e, 0x4f, 0x50, 0x51, 0x52, 0x53, 0x54, 0x55, 0x56, 0x57, 0x58, 0x59, 0x5a, 0x61, 0x62, 0x63, 0x64, 0x65, 0x66, 0x67, 0x68, 0x69, 0x6a, 0x6b, 0x6c, 0x6d, 0x6e, 0x6f, 0x70, 0x71, 0x72, 0x73, 0x74, 0x75, 0x76, 0x77, 0x78, 0x79, 0x7a, 0x3f, 0x21, 0x2e, 0x2c, 0x28, 0x29, 0x20, 0x27, 0x2D };
+            int index = 0;
+            byte[] subs = new byte[subFile.Length];
+            int[] startsFromIndex = new int[10000];
+            startsFromIndex[0] = 8242;
+            int startsFromIndexIndex = 1;
+
+            for (int i = 0; i < subs.Length; i++)
+            {
+                for (int j = 0; j < letters.Length; j++)
+                    if (subFile[i] == letters[j] && subFile[i - 1] != 0xFF)
+                    {
+                        subs[index] = subFile[i];
+                        index++;
+                    }
+                if (subFile[i] == 0xFF && subFile[i + 1] == 0xFF && subFile[i + 2] == 0xFF && subFile[i + 3] == 0xFF)
+                {
+                    subs[index] = 0x0A;
+                    index++;
+                    startsFromIndex[startsFromIndexIndex] = i;
+                    startsFromIndexIndex++;
+                }
+            }
+            //asd1[i] = asd[FindBytes(asd, new byte[] { 0xFF, 0xFF, 0xFF, 0xFF, }, 0) + i];
+
+            File.WriteAllBytes(path + @"graceScript.txt", subs);
+            int counter = 0;
+            string tobewritten = "";
+            startsFromIndexIndex = 0;
+            foreach (string line in File.ReadLines(path + @"graceScript.txt"))
+            {
+
+                if (counter % 2 == 1 || counter == 1724 || counter == 2238 || counter == 2750 || counter == 2752 || counter == 3264 || counter == 3266 || counter == 3776 || counter == 3778 || counter == 3780 || counter == 4290 || counter == 4292 || counter == 4294 || counter == 4802 || counter == 4804 || counter == 4806 || counter == 4808 || counter == 5316 || counter == 5318 || counter == 5320 || counter == 5322 || counter == 5828 || counter == 5830 || counter == 5832 || counter == 5834 || counter == 5836 || counter == 6342 || counter == 6344 || counter == 6346 || counter == 6348 || counter == 6350 || counter == 6856 || counter == 6858 || counter == 6860 || counter == 6862 || counter == 6864 || counter == 7368 || counter == 7370 || counter == 7372 || counter == 7374 || counter == 7376 || counter == 7378 || counter == 7880 || counter == 7882 || counter == 7884 || counter == 7886 || counter == 7888 || counter == 7890 || counter == 7892)
+                {
+                    //Console.WriteLine(line);
+                    tobewritten += line + "=" + startsFromIndex[startsFromIndexIndex] + Environment.NewLine;
+
+                }
+                if (counter == 183 || counter == 696 || counter == 1209 || counter == 1722 || counter == 2235 || counter == 2748 || counter == 3262 || counter == 3774 || counter == 4287 || counter == 4800 || counter == 5313 || counter == 5826 || counter == 6339 || counter == 6853 || counter == 7365 || counter == 7878)
+                {
+                    counter++;
+                }
+                startsFromIndexIndex++;
+                counter++;
+            }
+            //File.WriteAllText(path + @"animation\grace\graceSubnonumber.txt", tobewritten);
+            File.WriteAllText(path + @"graceSubnonumberIndex.txt", tobewritten);
+        }
+        void readTripSubtitles() // It's very, very jank, proceed with caution!
+        {
+            byte[] subFile = File.ReadAllBytes(path + @"Backup\tripScript.sbinary");
+            byte[] letters = new byte[] { 0x41, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47, 0x48, 0x49, 0x4a, 0x4b, 0x4c, 0x4d, 0x4e, 0x4f, 0x50, 0x51, 0x52, 0x53, 0x54, 0x55, 0x56, 0x57, 0x58, 0x59, 0x5a, 0x61, 0x62, 0x63, 0x64, 0x65, 0x66, 0x67, 0x68, 0x69, 0x6a, 0x6b, 0x6c, 0x6d, 0x6e, 0x6f, 0x70, 0x71, 0x72, 0x73, 0x74, 0x75, 0x76, 0x77, 0x78, 0x79, 0x7a, 0x3f, 0x21, 0x2e, 0x2c, 0x28, 0x29, 0x20, 0x27, 0x2D, 0x5F };
+            int index = 0;
+            byte[] subs = new byte[subFile.Length];
+            int[] startsFromIndex = new int[10000];
+            startsFromIndex[0] = 8242;
+            int startsFromIndexIndex = 1;
+
+            for (int i = 0; i < subs.Length; i++)
+            {
+                for (int j = 0; j < letters.Length; j++)
+                    if (subFile[i] == letters[j] && subFile[i - 1] != 0xFF)
+                    {
+                        subs[index] = subFile[i];
+                        index++;
+                    }
+                if (subFile[i] == 0xFF && subFile[i + 1] == 0xFF && subFile[i + 2] == 0xFF && subFile[i + 3] == 0xFF)
+                {
+                    subs[index] = 0x0A;
+                    index++;
+                    startsFromIndex[startsFromIndexIndex] = i;
+                    startsFromIndexIndex++;
+                }
+            }
+            File.WriteAllBytes(path + "tripScript.txt", subs);
+            int counter = 0;
+            string tobewritten = "";
+            startsFromIndexIndex = 0;
+            foreach (string line in File.ReadLines(path + "tripScript.txt"))
+            {
+                if (counter % 2 == 1 || counter == 2038 || counter == 2552 || counter == 3064 || counter == 3066 || counter == 3578 || counter == 3580 || counter == 4090 || counter == 4092 || counter == 4094 || counter == 4602 || counter == 4604 || counter == 4606 || counter == 4608 || counter == 5116 || counter == 5118 || counter == 5120 || counter == 5122 || counter == 5630 || counter == 5632 || counter == 5634 || counter == 5636 || counter == 6142 || counter == 6144 || counter == 6146 || counter == 6148 || counter == 6150 || counter == 6654 || counter == 6656 || counter == 6658 || counter == 6660 || counter == 6662 || counter == 6664 || counter == 7168 || counter == 7170 || counter == 7172 || counter == 7174 || counter == 7176 || counter == 7178 || counter == 7680 || counter == 7682 || counter == 7684 || counter == 7686 || counter == 7688 || counter == 7690 || counter == 7692 || counter == 8194 || counter == 8196 || counter == 8198 || counter == 8200 || counter == 8202 || counter == 8204 || counter == 8206 || counter == 8706 || counter == 8708 || counter == 8710 || counter == 8712 || counter == 8714 || counter == 8716 || counter == 8718 || counter == 8720)
+                {
+                    //Console.WriteLine(line);
+                    tobewritten += line + "=" + startsFromIndex[startsFromIndexIndex] + Environment.NewLine;
+                }
+                if (counter == 497 || counter == 1010 || counter == 1523 || counter == 2036 || counter == 2549 || counter == 3062 || counter == 3575 || counter == 4088 || counter == 4601 || counter == 5114 || counter == 5628 || counter == 6140 || counter == 6653 || counter == 7166 || counter == 7679 || counter == 8192 || counter == 8705)
+                {
+                    counter++;
+                    //Console.ReadKey();
+                }
+                counter++;
+                startsFromIndexIndex++;
+            }
+            File.WriteAllText(path + @"tripSubnonumberIndex.txt", tobewritten);
+        }
+        static byte[] convert(byte[] source) 
+        {
+            byte[] replaced = new byte[source.Length * 4];
+            for (int i = 0; i < source.Length; i++)
+            {
+                replaced[i * 4] = source[i];
+                replaced[i * 4 + 1] = 0x00;
+                replaced[i * 4 + 2] = 0x00;
+                replaced[i * 4 + 3] = 0x00;
+            }
+            return replaced;
+        }
 
         void checkProgramFilesFolder()
         {
@@ -996,7 +1168,7 @@ namespace facade_editor
             else
                 decompressedCheckBox.Checked = true;
 
-            if (FindBytes(File.ReadAllBytes(path + "animEngineDLL.dll"), new byte[] { 0x6a, 0x61, 0x76, 0x62, 0x2e, 0x62, 0x61, 0x74 }) == -1)
+            if (FindBytes(File.ReadAllBytes(path + "animEngineDLL.dll"), new byte[] { 0x6a, 0x61, 0x76, 0x62, 0x2e, 0x62, 0x61, 0x74 },0) == -1)
             {
                 javaDebugCheckBox.Checked = false;
                 launchButton.Enabled = false;
@@ -1182,36 +1354,12 @@ namespace facade_editor
         }
 
 
-        byte[] ReplaceBytes(byte[] src, byte[] search, byte[] repl)
-        {
-            byte[] dst = null;
-
-            int index = FindBytes(src, search);
-            if (index >= 0)
-            {
-                dst = new byte[src.Length - search.Length + repl.Length];
-                //before found array
-                Buffer.BlockCopy(src, 0, dst, 0, index);
-                //repl copy
-                Buffer.BlockCopy(repl, 0, dst, index, repl.Length);
-                //rest of src array
-                Buffer.BlockCopy(
-                    src,
-                    index + search.Length,
-                    dst,
-                    index + repl.Length,
-                    src.Length - (index + search.Length));
-            }
-
-
-            return dst;
-        }
-        int FindBytes(byte[] src, byte[] find)
+        static int FindBytes(byte[] src, byte[] find, int startindex)
         {
             int index = -1;
             int matchIndex = 0;
             // handle the complete source array
-            for (int i = 0; i < src.Length; i++)
+            for (int i = startindex; i < src.Length; i++)
             {
                 if (src[i] == find[matchIndex])
                 {
@@ -1230,9 +1378,38 @@ namespace facade_editor
                 {
                     matchIndex = 0;
                 }
-
             }
             return index;
+        }
+        static byte[] ReplaceBytes(byte[] src, byte[] search, byte[] repl, int startIndex)
+        {
+            try
+            {
+                byte[] dst = null;
+
+                int index = FindBytes(src, search, startIndex);
+                if (index >= 0)
+                {
+                    dst = new byte[src.Length - search.Length + repl.Length];
+                    // before found array
+                    Buffer.BlockCopy(src, 0, dst, 0, index);
+                    // repl copy
+                    Buffer.BlockCopy(repl, 0, dst, index, repl.Length);
+                    // rest of src array
+                    Buffer.BlockCopy(
+                        src,
+                        index + search.Length,
+                        dst,
+                        index + repl.Length,
+                        src.Length - (index + search.Length));
+                    return dst;
+                }
+                else return src;
+
+
+
+            }
+            catch { return src; }
         }
 
         private void javaDebugCheckBox_Click(object sender, EventArgs e)
@@ -1246,7 +1423,7 @@ namespace facade_editor
                         File.Copy(path + @"animEngineDLL.dll", path + @"Backup\animEngineDLL.dll");
                         MessageBox.Show(@"Backup generated for animEngineDLL.dll at Facade\util\sources\facade\Backup just in case something goes wrong");
                     }
-                    File.WriteAllBytes(path + "animEngineDLL.dll", ReplaceBytes(File.ReadAllBytes(path + "animEngineDLL.dll"), new byte[] { 0x6a, 0x61, 0x76, 0x61, 0x2e, 0x65, 0x78, 0x65 }, new byte[] { 0x6a, 0x61, 0x76, 0x62, 0x2e, 0x62, 0x61, 0x74 })); // basically hex editing out "java.exe" with "javb.bat" in the DLL
+                    File.WriteAllBytes(path + "animEngineDLL.dll", ReplaceBytes(File.ReadAllBytes(path + "animEngineDLL.dll"), new byte[] { 0x6a, 0x61, 0x76, 0x61, 0x2e, 0x65, 0x78, 0x65 }, new byte[] { 0x6a, 0x61, 0x76, 0x62, 0x2e, 0x62, 0x61, 0x74 },0)); // basically hex editing out "java.exe" with "javb.bat" in the DLL
                     launchButton.Enabled = true;
                     MessageBox.Show("Don't forget to disable this, otherwise the game will just load forever when you're not using the Launch button!", "Don't forget!!!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
@@ -1261,7 +1438,7 @@ namespace facade_editor
                 try
                 {
                     launchButton.Enabled = false;
-                    File.WriteAllBytes(path + "animEngineDLL.dll", ReplaceBytes(File.ReadAllBytes(path + "animEngineDLL.dll"), new byte[] { 0x6a, 0x61, 0x76, 0x62, 0x2e, 0x62, 0x61, 0x74 }, new byte[] { 0x6a, 0x61, 0x76, 0x61, 0x2e, 0x65, 0x78, 0x65, }));
+                    File.WriteAllBytes(path + "animEngineDLL.dll", ReplaceBytes(File.ReadAllBytes(path + "animEngineDLL.dll"), new byte[] { 0x6a, 0x61, 0x76, 0x62, 0x2e, 0x62, 0x61, 0x74 }, new byte[] { 0x6a, 0x61, 0x76, 0x61, 0x2e, 0x65, 0x78, 0x65, },0));
                 }
                 catch (Exception ex)
                 {
@@ -1281,6 +1458,47 @@ namespace facade_editor
         {
             if (animationsHardCorruptionCheckBox.Checked)
             MessageBox.Show("It is recommended to leave this off, sometimes you get funnier results, but most of the time Grace's and/or Trip's sprite just disappear","Hey",MessageBoxButtons.OK,MessageBoxIcon.Exclamation);
+        }
+
+
+        private void godModeCheckbox_Click(object sender, EventArgs e)
+        {
+            DialogResult dialogResult = DialogResult.Yes;
+            if (File.Exists(path + @"nlu\reaction\Proposer_GGreetsP.bin.jess") || File.Exists(path + @"nlu\reaction\Proposer_GlobalMixIn.bin.jess") || File.Exists(path + @"nlu\reaction\Proposer_TGreetsP.bin.jess"))
+                dialogResult = MessageBox.Show("Warning! This will overwrite the Proposer_GGreetsP.bin.jess, Proposer_GlobalMixIn.bin.jess, Proposer_TGreetsP.bin.jess files found in the nlu\\reaction folder! If you have modified them, make a backup first. \n\n\nIf you didn't modify them, or don't know what i'm talking about, just press yes to continue.", "Woah", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+                if (dialogResult == DialogResult.Yes)
+                    try
+                    {
+                                if (path.Contains(@"sources"))
+                                {
+                                    if (godModeCheckbox.Checked)
+                                    {
+                                        File.Copy(@"files\Proposer_GGreetsP.bin", path + @"nlu\reaction\Proposer_GGreetsP.bin", true);
+                                        File.Copy(@"files\Proposer_GlobalMixIn.bin", path + @"nlu\reaction\Proposer_GlobalMixIn.bin", true);
+                                        File.Copy(@"files\Proposer_TGreetsP.bin", path + @"nlu\reaction\Proposer_TGreetsP.bin", true);
+                                    }
+                                    else
+                                    {
+                                        File.Copy(@"files\Proposer_GGreetsP_orig.bin", path + @"nlu\reaction\Proposer_GGreetsP.bin", true);
+                                        File.Copy(@"files\Proposer_GlobalMixIn_orig.bin", path + @"nlu\reaction\Proposer_GlobalMixIn.bin", true);
+                                        File.Copy(@"files\Proposer_TGreetsP_orig.bin", path + @"nlu\reaction\Proposer_TGreetsP.bin", true);
+                                    }
+                                    if (decompressedCheckBox.Checked || File.Exists(path + @"nlu\reaction\Proposer_GGreetsP.bin.jess") || File.Exists(path + @"nlu\reaction\Proposer_GlobalMixIn.bin.jess") || File.Exists(path + @"nlu\reaction\Proposer_TGreetsP.bin.jess"))
+                                    {
+                                        Decompress(path + @"nlu\reaction\Proposer_GGreetsP.bin");
+                                        Decompress(path + @"nlu\reaction\Proposer_GlobalMixIn.bin");
+                                        Decompress(path + @"nlu\reaction\Proposer_TGreetsP.bin");
+                                    }
+                                }
+                                else { MessageBox.Show("Not the right path"); godModeCheckbox.Checked = false; }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Error:" + ex.Message, "Oh no");
+                        godModeCheckbox.Checked = !godModeCheckbox.Checked;
+                    }
+                else godModeCheckbox.Checked = !godModeCheckbox.Checked;
         }
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

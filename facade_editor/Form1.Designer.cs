@@ -33,6 +33,28 @@ namespace facade_editor
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.folderBrowserDialog2 = new System.Windows.Forms.FolderBrowserDialog();
+            this.label1 = new System.Windows.Forms.Label();
+            this.superSecretPictureBox = new System.Windows.Forms.PictureBox();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.label13 = new System.Windows.Forms.Label();
+            this.dontUseFilesFromBackupRadioButton = new System.Windows.Forms.RadioButton();
+            this.useBackupFilesRadioButton = new System.Windows.Forms.RadioButton();
+            this.restoreButton = new System.Windows.Forms.Button();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.linkLabel2 = new System.Windows.Forms.LinkLabel();
+            this.creditLabel = new System.Windows.Forms.Label();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+            this.label3 = new System.Windows.Forms.Label();
+            this.javaDebugCheckBox = new System.Windows.Forms.CheckBox();
+            this.launchButton = new System.Windows.Forms.Button();
+            this.decompressedCheckBox = new System.Windows.Forms.CheckBox();
+            this.decompressButton = new System.Windows.Forms.Button();
+            this.label12 = new System.Windows.Forms.Label();
+            this.AICheckBox = new System.Windows.Forms.CheckBox();
+            this.label11 = new System.Windows.Forms.Label();
+            this.dramaManagerCheckBox = new System.Windows.Forms.CheckBox();
+            this.label10 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.label6 = new System.Windows.Forms.Label();
             this.globalCheckBox = new System.Windows.Forms.CheckBox();
@@ -46,11 +68,9 @@ namespace facade_editor
             this.replaceBrowseButton = new System.Windows.Forms.Button();
             this.replaceButton = new System.Windows.Forms.Button();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.subtitlesCheckBox = new System.Windows.Forms.CheckBox();
             this.animationsHardCorruptionCheckBox = new System.Windows.Forms.CheckBox();
             this.label9 = new System.Windows.Forms.Label();
-            this.restoreButton = new System.Windows.Forms.Button();
-            this.useBackupFilesRadioButton = new System.Windows.Forms.RadioButton();
-            this.dontUseFilesFromBackupRadioButton = new System.Windows.Forms.RadioButton();
             this.label8 = new System.Windows.Forms.Label();
             this.lettersTextureIntactCheckBox = new System.Windows.Forms.CheckBox();
             this.label7 = new System.Windows.Forms.Label();
@@ -64,37 +84,257 @@ namespace facade_editor
             this.browseButton = new System.Windows.Forms.Button();
             this.soundsCheckBox = new System.Windows.Forms.CheckBox();
             this.texturesCheckBox = new System.Windows.Forms.CheckBox();
-            this.label1 = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
-            this.label3 = new System.Windows.Forms.Label();
-            this.javaDebugCheckBox = new System.Windows.Forms.CheckBox();
-            this.launchButton = new System.Windows.Forms.Button();
-            this.decompressedCheckBox = new System.Windows.Forms.CheckBox();
-            this.label13 = new System.Windows.Forms.Label();
-            this.decompressButton = new System.Windows.Forms.Button();
-            this.label12 = new System.Windows.Forms.Label();
-            this.AICheckBox = new System.Windows.Forms.CheckBox();
-            this.label11 = new System.Windows.Forms.Label();
-            this.dramaManagerCheckBox = new System.Windows.Forms.CheckBox();
-            this.label10 = new System.Windows.Forms.Label();
-            this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.linkLabel2 = new System.Windows.Forms.LinkLabel();
-            this.creditLabel = new System.Windows.Forms.Label();
-            this.superSecretPictureBox = new System.Windows.Forms.PictureBox();
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.label2 = new System.Windows.Forms.Label();
+            this.godModeCheckbox = new System.Windows.Forms.CheckBox();
+            this.label5 = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this.superSecretPictureBox)).BeginInit();
+            this.tabPage4.SuspendLayout();
+            this.tabPage3.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabControl1.SuspendLayout();
-            this.tabPage3.SuspendLayout();
-            this.tabPage4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.superSecretPictureBox)).BeginInit();
+            this.tabPage5.SuspendLayout();
             this.SuspendLayout();
             // 
             // folderBrowserDialog1
             // 
             this.folderBrowserDialog1.ShowNewFolderButton = false;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(23, 458);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(0, 13);
+            this.label1.TabIndex = 1;
+            // 
+            // superSecretPictureBox
+            // 
+            this.superSecretPictureBox.Location = new System.Drawing.Point(0, 0);
+            this.superSecretPictureBox.Name = "superSecretPictureBox";
+            this.superSecretPictureBox.Size = new System.Drawing.Size(100, 50);
+            this.superSecretPictureBox.TabIndex = 0;
+            this.superSecretPictureBox.TabStop = false;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(4, 166);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(491, 26);
+            this.label13.TabIndex = 6;
+            this.label13.Text = resources.GetString("label13.Text");
+            this.toolTip1.SetToolTip(this.label13, "More like decompress");
+            // 
+            // dontUseFilesFromBackupRadioButton
+            // 
+            this.dontUseFilesFromBackupRadioButton.AutoSize = true;
+            this.dontUseFilesFromBackupRadioButton.Checked = true;
+            this.dontUseFilesFromBackupRadioButton.Location = new System.Drawing.Point(13, 243);
+            this.dontUseFilesFromBackupRadioButton.Name = "dontUseFilesFromBackupRadioButton";
+            this.dontUseFilesFromBackupRadioButton.Size = new System.Drawing.Size(168, 17);
+            this.dontUseFilesFromBackupRadioButton.TabIndex = 15;
+            this.dontUseFilesFromBackupRadioButton.TabStop = true;
+            this.dontUseFilesFromBackupRadioButton.Text = "Use files that\'s already in there";
+            this.toolTip1.SetToolTip(this.dontUseFilesFromBackupRadioButton, "This is useful if you already have custom files mixed in the game files, and it\'s" +
+        " way faster");
+            this.dontUseFilesFromBackupRadioButton.UseVisualStyleBackColor = true;
+            // 
+            // useBackupFilesRadioButton
+            // 
+            this.useBackupFilesRadioButton.AutoSize = true;
+            this.useBackupFilesRadioButton.Enabled = false;
+            this.useBackupFilesRadioButton.Location = new System.Drawing.Point(187, 243);
+            this.useBackupFilesRadioButton.Name = "useBackupFilesRadioButton";
+            this.useBackupFilesRadioButton.Size = new System.Drawing.Size(163, 17);
+            this.useBackupFilesRadioButton.TabIndex = 16;
+            this.useBackupFilesRadioButton.Text = "Use original files from backup";
+            this.toolTip1.SetToolTip(this.useBackupFilesRadioButton, "You can only use this if there is a backup generated already");
+            this.useBackupFilesRadioButton.UseVisualStyleBackColor = true;
+            // 
+            // restoreButton
+            // 
+            this.restoreButton.Enabled = false;
+            this.restoreButton.Location = new System.Drawing.Point(513, 195);
+            this.restoreButton.Name = "restoreButton";
+            this.restoreButton.Size = new System.Drawing.Size(75, 23);
+            this.restoreButton.TabIndex = 17;
+            this.restoreButton.Text = "Restore";
+            this.toolTip1.SetToolTip(this.restoreButton, "You can only use this if there is a backup generated already");
+            this.restoreButton.UseVisualStyleBackColor = true;
+            this.restoreButton.Click += new System.EventHandler(this.restoreButton_Click);
+            // 
+            // tabPage4
+            // 
+            this.tabPage4.Controls.Add(this.linkLabel2);
+            this.tabPage4.Controls.Add(this.creditLabel);
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage4.Size = new System.Drawing.Size(592, 419);
+            this.tabPage4.TabIndex = 3;
+            this.tabPage4.Text = "About";
+            this.tabPage4.UseVisualStyleBackColor = true;
+            this.tabPage4.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tabPage4_Click);
+            // 
+            // linkLabel2
+            // 
+            this.linkLabel2.AutoSize = true;
+            this.linkLabel2.Location = new System.Drawing.Point(6, 12);
+            this.linkLabel2.Name = "linkLabel2";
+            this.linkLabel2.Size = new System.Drawing.Size(84, 13);
+            this.linkLabel2.TabIndex = 2;
+            this.linkLabel2.TabStop = true;
+            this.linkLabel2.Text = "Made by G4B33";
+            this.linkLabel2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel2_LinkClicked);
+            // 
+            // creditLabel
+            // 
+            this.creditLabel.AutoSize = true;
+            this.creditLabel.Location = new System.Drawing.Point(6, 40);
+            this.creditLabel.Name = "creditLabel";
+            this.creditLabel.Size = new System.Drawing.Size(201, 13);
+            this.creditLabel.TabIndex = 1;
+            this.creditLabel.Text = "Special thanks to the Façade developers";
+            // 
+            // tabPage3
+            // 
+            this.tabPage3.Controls.Add(this.linkLabel1);
+            this.tabPage3.Controls.Add(this.label3);
+            this.tabPage3.Controls.Add(this.javaDebugCheckBox);
+            this.tabPage3.Controls.Add(this.launchButton);
+            this.tabPage3.Controls.Add(this.decompressedCheckBox);
+            this.tabPage3.Controls.Add(this.label13);
+            this.tabPage3.Controls.Add(this.decompressButton);
+            this.tabPage3.Controls.Add(this.label12);
+            this.tabPage3.Controls.Add(this.AICheckBox);
+            this.tabPage3.Controls.Add(this.label11);
+            this.tabPage3.Controls.Add(this.dramaManagerCheckBox);
+            this.tabPage3.Controls.Add(this.label10);
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(592, 419);
+            this.tabPage3.TabIndex = 2;
+            this.tabPage3.Text = "Advanced";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // linkLabel1
+            // 
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.Location = new System.Drawing.Point(6, 389);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(175, 13);
+            this.linkLabel1.TabIndex = 12;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "How to decompile Java class files...";
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.ForeColor = System.Drawing.Color.Red;
+            this.label3.Location = new System.Drawing.Point(6, 278);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(413, 13);
+            this.label3.TabIndex = 11;
+            this.label3.Text = "When this setting is enabled, you can only launch the game with the \"Launch\" butt" +
+    "on!";
+            // 
+            // javaDebugCheckBox
+            // 
+            this.javaDebugCheckBox.AutoSize = true;
+            this.javaDebugCheckBox.Location = new System.Drawing.Point(6, 258);
+            this.javaDebugCheckBox.Name = "javaDebugCheckBox";
+            this.javaDebugCheckBox.Size = new System.Drawing.Size(345, 17);
+            this.javaDebugCheckBox.TabIndex = 10;
+            this.javaDebugCheckBox.Text = "Enable Java backend debug logging in a console window on the fly";
+            this.javaDebugCheckBox.UseVisualStyleBackColor = true;
+            this.javaDebugCheckBox.Click += new System.EventHandler(this.javaDebugCheckBox_Click);
+            // 
+            // launchButton
+            // 
+            this.launchButton.Location = new System.Drawing.Point(469, 271);
+            this.launchButton.Name = "launchButton";
+            this.launchButton.Size = new System.Drawing.Size(75, 23);
+            this.launchButton.TabIndex = 8;
+            this.launchButton.Text = "Launch";
+            this.launchButton.UseVisualStyleBackColor = true;
+            this.launchButton.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // decompressedCheckBox
+            // 
+            this.decompressedCheckBox.AutoSize = true;
+            this.decompressedCheckBox.Location = new System.Drawing.Point(7, 195);
+            this.decompressedCheckBox.Name = "decompressedCheckBox";
+            this.decompressedCheckBox.Size = new System.Drawing.Size(450, 17);
+            this.decompressedCheckBox.TabIndex = 7;
+            this.decompressedCheckBox.Text = "let the game use the decompiled files instead, so you can still edit the code to " +
+    "play around.";
+            this.decompressedCheckBox.UseVisualStyleBackColor = true;
+            this.decompressedCheckBox.Click += new System.EventHandler(this.decompressedCheckBox_Click);
+            // 
+            // decompressButton
+            // 
+            this.decompressButton.Location = new System.Drawing.Point(3, 218);
+            this.decompressButton.Name = "decompressButton";
+            this.decompressButton.Size = new System.Drawing.Size(75, 23);
+            this.decompressButton.TabIndex = 5;
+            this.decompressButton.Text = "Disassemble";
+            this.decompressButton.UseVisualStyleBackColor = true;
+            this.decompressButton.Click += new System.EventHandler(this.decompressButton_Click);
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(4, 119);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(342, 26);
+            this.label12.TabIndex = 4;
+            this.label12.Text = "Generates a detailed debug log text file at the end of a gaming session.\r\nThe log" +
+    " file will be generated at Facade\\util\\sources\\facade\\eventlogs";
+            // 
+            // AICheckBox
+            // 
+            this.AICheckBox.AutoSize = true;
+            this.AICheckBox.Location = new System.Drawing.Point(6, 99);
+            this.AICheckBox.Name = "AICheckBox";
+            this.AICheckBox.Size = new System.Drawing.Size(103, 17);
+            this.AICheckBox.TabIndex = 3;
+            this.AICheckBox.Text = "Enable \"AI Log\"";
+            this.AICheckBox.UseVisualStyleBackColor = true;
+            this.AICheckBox.Click += new System.EventHandler(this.AICheckBox_Click);
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(4, 58);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(540, 26);
+            this.label11.TabIndex = 2;
+            this.label11.Text = resources.GetString("label11.Text");
+            // 
+            // dramaManagerCheckBox
+            // 
+            this.dramaManagerCheckBox.AutoSize = true;
+            this.dramaManagerCheckBox.Location = new System.Drawing.Point(7, 38);
+            this.dramaManagerCheckBox.Name = "dramaManagerCheckBox";
+            this.dramaManagerCheckBox.Size = new System.Drawing.Size(186, 17);
+            this.dramaManagerCheckBox.TabIndex = 1;
+            this.dramaManagerCheckBox.Text = "Enable \"Drama Manager Monitor\"";
+            this.dramaManagerCheckBox.UseVisualStyleBackColor = true;
+            this.dramaManagerCheckBox.Click += new System.EventHandler(this.dramaManagerCheckBox_Click);
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(4, 7);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(246, 13);
+            this.label10.TabIndex = 0;
+            this.label10.Text = "Intended for those who know a bit of programming.";
             // 
             // tabPage2
             // 
@@ -237,6 +477,7 @@ namespace facade_editor
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.subtitlesCheckBox);
             this.tabPage1.Controls.Add(this.animationsHardCorruptionCheckBox);
             this.tabPage1.Controls.Add(this.label9);
             this.tabPage1.Controls.Add(this.restoreButton);
@@ -263,6 +504,16 @@ namespace facade_editor
             this.tabPage1.Text = "Randomize";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // subtitlesCheckBox
+            // 
+            this.subtitlesCheckBox.AutoSize = true;
+            this.subtitlesCheckBox.Location = new System.Drawing.Point(298, 129);
+            this.subtitlesCheckBox.Name = "subtitlesCheckBox";
+            this.subtitlesCheckBox.Size = new System.Drawing.Size(156, 17);
+            this.subtitlesCheckBox.TabIndex = 20;
+            this.subtitlesCheckBox.Text = "Subtitles (beta, might crash)";
+            this.subtitlesCheckBox.UseVisualStyleBackColor = true;
+            // 
             // animationsHardCorruptionCheckBox
             // 
             this.animationsHardCorruptionCheckBox.AutoSize = true;
@@ -283,44 +534,6 @@ namespace facade_editor
             this.label9.Size = new System.Drawing.Size(105, 13);
             this.label9.TabIndex = 18;
             this.label9.Text = "Randomize/Restore:";
-            // 
-            // restoreButton
-            // 
-            this.restoreButton.Enabled = false;
-            this.restoreButton.Location = new System.Drawing.Point(513, 195);
-            this.restoreButton.Name = "restoreButton";
-            this.restoreButton.Size = new System.Drawing.Size(75, 23);
-            this.restoreButton.TabIndex = 17;
-            this.restoreButton.Text = "Restore";
-            this.toolTip1.SetToolTip(this.restoreButton, "You can only use this if there is a backup generated already");
-            this.restoreButton.UseVisualStyleBackColor = true;
-            this.restoreButton.Click += new System.EventHandler(this.restoreButton_Click);
-            // 
-            // useBackupFilesRadioButton
-            // 
-            this.useBackupFilesRadioButton.AutoSize = true;
-            this.useBackupFilesRadioButton.Enabled = false;
-            this.useBackupFilesRadioButton.Location = new System.Drawing.Point(187, 243);
-            this.useBackupFilesRadioButton.Name = "useBackupFilesRadioButton";
-            this.useBackupFilesRadioButton.Size = new System.Drawing.Size(163, 17);
-            this.useBackupFilesRadioButton.TabIndex = 16;
-            this.useBackupFilesRadioButton.Text = "Use original files from backup";
-            this.toolTip1.SetToolTip(this.useBackupFilesRadioButton, "You can only use this if there is a backup generated already");
-            this.useBackupFilesRadioButton.UseVisualStyleBackColor = true;
-            // 
-            // dontUseFilesFromBackupRadioButton
-            // 
-            this.dontUseFilesFromBackupRadioButton.AutoSize = true;
-            this.dontUseFilesFromBackupRadioButton.Checked = true;
-            this.dontUseFilesFromBackupRadioButton.Location = new System.Drawing.Point(13, 243);
-            this.dontUseFilesFromBackupRadioButton.Name = "dontUseFilesFromBackupRadioButton";
-            this.dontUseFilesFromBackupRadioButton.Size = new System.Drawing.Size(168, 17);
-            this.dontUseFilesFromBackupRadioButton.TabIndex = 15;
-            this.dontUseFilesFromBackupRadioButton.TabStop = true;
-            this.dontUseFilesFromBackupRadioButton.Text = "Use files that\'s already in there";
-            this.toolTip1.SetToolTip(this.dontUseFilesFromBackupRadioButton, "This is useful if you already have custom files mixed in the game files, and it\'s" +
-        " way faster");
-            this.dontUseFilesFromBackupRadioButton.UseVisualStyleBackColor = true;
             // 
             // label8
             // 
@@ -451,18 +664,11 @@ namespace facade_editor
             this.texturesCheckBox.UseVisualStyleBackColor = true;
             this.texturesCheckBox.CheckedChanged += new System.EventHandler(this.texturesTextBox_CheckedChanged);
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(23, 458);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(0, 13);
-            this.label1.TabIndex = 1;
-            // 
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.tabPage5);
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Location = new System.Drawing.Point(11, 14);
@@ -472,193 +678,49 @@ namespace facade_editor
             this.tabControl1.TabIndex = 10;
             this.tabControl1.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.tabControl1_Selecting);
             // 
-            // tabPage3
+            // tabPage5
             // 
-            this.tabPage3.Controls.Add(this.linkLabel1);
-            this.tabPage3.Controls.Add(this.label3);
-            this.tabPage3.Controls.Add(this.javaDebugCheckBox);
-            this.tabPage3.Controls.Add(this.launchButton);
-            this.tabPage3.Controls.Add(this.decompressedCheckBox);
-            this.tabPage3.Controls.Add(this.label13);
-            this.tabPage3.Controls.Add(this.decompressButton);
-            this.tabPage3.Controls.Add(this.label12);
-            this.tabPage3.Controls.Add(this.AICheckBox);
-            this.tabPage3.Controls.Add(this.label11);
-            this.tabPage3.Controls.Add(this.dramaManagerCheckBox);
-            this.tabPage3.Controls.Add(this.label10);
-            this.tabPage3.Location = new System.Drawing.Point(4, 22);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(592, 419);
-            this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "Advanced";
-            this.tabPage3.UseVisualStyleBackColor = true;
+            this.tabPage5.Controls.Add(this.label5);
+            this.tabPage5.Controls.Add(this.label2);
+            this.tabPage5.Controls.Add(this.godModeCheckbox);
+            this.tabPage5.Location = new System.Drawing.Point(4, 22);
+            this.tabPage5.Name = "tabPage5";
+            this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage5.Size = new System.Drawing.Size(592, 419);
+            this.tabPage5.TabIndex = 4;
+            this.tabPage5.Text = "Fun";
+            this.tabPage5.UseVisualStyleBackColor = true;
             // 
-            // linkLabel1
+            // label2
             // 
-            this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(6, 389);
-            this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(175, 13);
-            this.linkLabel1.TabIndex = 12;
-            this.linkLabel1.TabStop = true;
-            this.linkLabel1.Text = "How to decompile Java class files...";
-            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(4, 58);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(491, 26);
+            this.label2.TabIndex = 1;
+            this.label2.Text = "Trip won\'t kick you out, except if you try to leave the apartment 3 times, if I d" +
+    "isable that the story hangs.\r\nNeeds more testing, maybe it doesn\'t work at every" +
+    " occasion?";
             // 
-            // label3
+            // godModeCheckbox
             // 
-            this.label3.AutoSize = true;
-            this.label3.ForeColor = System.Drawing.Color.Red;
-            this.label3.Location = new System.Drawing.Point(6, 278);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(413, 13);
-            this.label3.TabIndex = 11;
-            this.label3.Text = "When this setting is enabled, you can only launch the game with the \"Launch\" butt" +
-    "on!";
+            this.godModeCheckbox.AutoSize = true;
+            this.godModeCheckbox.Location = new System.Drawing.Point(7, 38);
+            this.godModeCheckbox.Name = "godModeCheckbox";
+            this.godModeCheckbox.Size = new System.Drawing.Size(75, 17);
+            this.godModeCheckbox.TabIndex = 0;
+            this.godModeCheckbox.Text = "God mode";
+            this.godModeCheckbox.UseVisualStyleBackColor = true;
+            this.godModeCheckbox.Click += new System.EventHandler(this.godModeCheckbox_Click);
             // 
-            // javaDebugCheckBox
+            // label5
             // 
-            this.javaDebugCheckBox.AutoSize = true;
-            this.javaDebugCheckBox.Location = new System.Drawing.Point(6, 258);
-            this.javaDebugCheckBox.Name = "javaDebugCheckBox";
-            this.javaDebugCheckBox.Size = new System.Drawing.Size(345, 17);
-            this.javaDebugCheckBox.TabIndex = 10;
-            this.javaDebugCheckBox.Text = "Enable Java backend debug logging in a console window on the fly";
-            this.javaDebugCheckBox.UseVisualStyleBackColor = true;
-            this.javaDebugCheckBox.Click += new System.EventHandler(this.javaDebugCheckBox_Click);
-            // 
-            // launchButton
-            // 
-            this.launchButton.Location = new System.Drawing.Point(469, 271);
-            this.launchButton.Name = "launchButton";
-            this.launchButton.Size = new System.Drawing.Size(75, 23);
-            this.launchButton.TabIndex = 8;
-            this.launchButton.Text = "Launch";
-            this.launchButton.UseVisualStyleBackColor = true;
-            this.launchButton.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // decompressedCheckBox
-            // 
-            this.decompressedCheckBox.AutoSize = true;
-            this.decompressedCheckBox.Location = new System.Drawing.Point(7, 195);
-            this.decompressedCheckBox.Name = "decompressedCheckBox";
-            this.decompressedCheckBox.Size = new System.Drawing.Size(450, 17);
-            this.decompressedCheckBox.TabIndex = 7;
-            this.decompressedCheckBox.Text = "let the game use the decompiled files instead, so you can still edit the code to " +
-    "play around.";
-            this.decompressedCheckBox.UseVisualStyleBackColor = true;
-            this.decompressedCheckBox.Click += new System.EventHandler(this.decompressedCheckBox_Click);
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(4, 166);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(491, 26);
-            this.label13.TabIndex = 6;
-            this.label13.Text = resources.GetString("label13.Text");
-            this.toolTip1.SetToolTip(this.label13, "More like decompress");
-            // 
-            // decompressButton
-            // 
-            this.decompressButton.Location = new System.Drawing.Point(3, 218);
-            this.decompressButton.Name = "decompressButton";
-            this.decompressButton.Size = new System.Drawing.Size(75, 23);
-            this.decompressButton.TabIndex = 5;
-            this.decompressButton.Text = "Disassemble";
-            this.decompressButton.UseVisualStyleBackColor = true;
-            this.decompressButton.Click += new System.EventHandler(this.decompressButton_Click);
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(4, 119);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(342, 26);
-            this.label12.TabIndex = 4;
-            this.label12.Text = "Generates a detailed debug log text file at the end of a gaming session.\r\nThe log" +
-    " file will be generated at Facade\\util\\sources\\facade\\eventlogs";
-            // 
-            // AICheckBox
-            // 
-            this.AICheckBox.AutoSize = true;
-            this.AICheckBox.Location = new System.Drawing.Point(6, 99);
-            this.AICheckBox.Name = "AICheckBox";
-            this.AICheckBox.Size = new System.Drawing.Size(103, 17);
-            this.AICheckBox.TabIndex = 3;
-            this.AICheckBox.Text = "Enable \"AI Log\"";
-            this.AICheckBox.UseVisualStyleBackColor = true;
-            this.AICheckBox.Click += new System.EventHandler(this.AICheckBox_Click);
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(4, 58);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(540, 26);
-            this.label11.TabIndex = 2;
-            this.label11.Text = resources.GetString("label11.Text");
-            // 
-            // dramaManagerCheckBox
-            // 
-            this.dramaManagerCheckBox.AutoSize = true;
-            this.dramaManagerCheckBox.Location = new System.Drawing.Point(7, 38);
-            this.dramaManagerCheckBox.Name = "dramaManagerCheckBox";
-            this.dramaManagerCheckBox.Size = new System.Drawing.Size(186, 17);
-            this.dramaManagerCheckBox.TabIndex = 1;
-            this.dramaManagerCheckBox.Text = "Enable \"Drama Manager Monitor\"";
-            this.dramaManagerCheckBox.UseVisualStyleBackColor = true;
-            this.dramaManagerCheckBox.Click += new System.EventHandler(this.dramaManagerCheckBox_Click);
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(4, 7);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(246, 13);
-            this.label10.TabIndex = 0;
-            this.label10.Text = "Intended for those who know a bit of programming.";
-            // 
-            // tabPage4
-            // 
-            this.tabPage4.Controls.Add(this.linkLabel2);
-            this.tabPage4.Controls.Add(this.creditLabel);
-            this.tabPage4.Location = new System.Drawing.Point(4, 22);
-            this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(592, 419);
-            this.tabPage4.TabIndex = 3;
-            this.tabPage4.Text = "About";
-            this.tabPage4.UseVisualStyleBackColor = true;
-            this.tabPage4.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tabPage4_Click);
-            // 
-            // linkLabel2
-            // 
-            this.linkLabel2.AutoSize = true;
-            this.linkLabel2.Location = new System.Drawing.Point(6, 12);
-            this.linkLabel2.Name = "linkLabel2";
-            this.linkLabel2.Size = new System.Drawing.Size(84, 13);
-            this.linkLabel2.TabIndex = 2;
-            this.linkLabel2.TabStop = true;
-            this.linkLabel2.Text = "Made by G4B33";
-            this.linkLabel2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel2_LinkClicked);
-            // 
-            // creditLabel
-            // 
-            this.creditLabel.AutoSize = true;
-            this.creditLabel.Location = new System.Drawing.Point(6, 40);
-            this.creditLabel.Name = "creditLabel";
-            this.creditLabel.Size = new System.Drawing.Size(201, 13);
-            this.creditLabel.TabIndex = 1;
-            this.creditLabel.Text = "Special thanks to the Façade developers";
-            // 
-            // superSecretPictureBox
-            // 
-            this.superSecretPictureBox.Location = new System.Drawing.Point(0, 0);
-            this.superSecretPictureBox.Name = "superSecretPictureBox";
-            this.superSecretPictureBox.Size = new System.Drawing.Size(100, 50);
-            this.superSecretPictureBox.TabIndex = 0;
-            this.superSecretPictureBox.TabStop = false;
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(6, 10);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(115, 13);
+            this.label5.TabIndex = 2;
+            this.label5.Text = "Mostly empty, for now..";
             // 
             // Form1
             // 
@@ -672,16 +734,18 @@ namespace facade_editor
             this.MaximizeBox = false;
             this.Name = "Form1";
             this.Text = "Façade corruptor";
+            ((System.ComponentModel.ISupportInitialize)(this.superSecretPictureBox)).EndInit();
+            this.tabPage4.ResumeLayout(false);
+            this.tabPage4.PerformLayout();
+            this.tabPage3.ResumeLayout(false);
+            this.tabPage3.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
             this.tabControl1.ResumeLayout(false);
-            this.tabPage3.ResumeLayout(false);
-            this.tabPage3.PerformLayout();
-            this.tabPage4.ResumeLayout(false);
-            this.tabPage4.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.superSecretPictureBox)).EndInit();
+            this.tabPage5.ResumeLayout(false);
+            this.tabPage5.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -690,6 +754,25 @@ namespace facade_editor
         #endregion
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog2;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.PictureBox superSecretPictureBox;
+        private System.Windows.Forms.TabPage tabPage4;
+        private System.Windows.Forms.LinkLabel linkLabel2;
+        private System.Windows.Forms.Label creditLabel;
+        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.LinkLabel linkLabel1;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.CheckBox javaDebugCheckBox;
+        private System.Windows.Forms.Button launchButton;
+        private System.Windows.Forms.CheckBox decompressedCheckBox;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Button decompressButton;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.CheckBox AICheckBox;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.CheckBox dramaManagerCheckBox;
+        private System.Windows.Forms.Label label10;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.CheckBox globalCheckBox;
@@ -703,6 +786,9 @@ namespace facade_editor
         private System.Windows.Forms.Button replaceBrowseButton;
         private System.Windows.Forms.Button replaceButton;
         private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.CheckBox animationsHardCorruptionCheckBox;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Button restoreButton;
         private System.Windows.Forms.RadioButton useBackupFilesRadioButton;
         private System.Windows.Forms.RadioButton dontUseFilesFromBackupRadioButton;
         private System.Windows.Forms.Label label8;
@@ -712,7 +798,6 @@ namespace facade_editor
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox pathTextbox;
         private System.Windows.Forms.TextBox randomizeLogTextBox;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.CheckBox animationsCheckBox;
         private System.Windows.Forms.Button randomizeButton;
         private System.Windows.Forms.CheckBox cursorsCheckBox;
@@ -720,27 +805,11 @@ namespace facade_editor
         private System.Windows.Forms.CheckBox soundsCheckBox;
         private System.Windows.Forms.CheckBox texturesCheckBox;
         private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.Button restoreButton;
-        private System.Windows.Forms.TabPage tabPage3;
-        private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.CheckBox dramaManagerCheckBox;
-        private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.CheckBox AICheckBox;
-        private System.Windows.Forms.ToolTip toolTip1;
-        private System.Windows.Forms.Button decompressButton;
-        private System.Windows.Forms.CheckBox decompressedCheckBox;
-        private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.Button launchButton;
-        private System.Windows.Forms.CheckBox javaDebugCheckBox;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.LinkLabel linkLabel1;
-        private System.Windows.Forms.TabPage tabPage4;
-        private System.Windows.Forms.PictureBox superSecretPictureBox;
-        private System.Windows.Forms.Label creditLabel;
-        private System.Windows.Forms.LinkLabel linkLabel2;
-        private System.Windows.Forms.CheckBox animationsHardCorruptionCheckBox;
+        private System.Windows.Forms.TabPage tabPage5;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.CheckBox godModeCheckbox;
+        private System.Windows.Forms.CheckBox subtitlesCheckBox;
+        private System.Windows.Forms.Label label5;
     }
 }
 
