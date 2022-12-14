@@ -1179,6 +1179,13 @@ namespace facade_editor
                 launchButton.Enabled = true;
             }
 
+            fileCompare = File.ReadAllText(path + @"nlu\reaction\Proposer_GlobalMixIn.bin");
+            fileCompare2 = File.ReadAllText(@"files\Proposer_GlobalMixIn_orig.bin");
+            if (fileCompare == fileCompare2)
+                godModeCheckbox.Checked = false;
+            else
+                godModeCheckbox.Checked = true;
+
         }
 
         private void dramaManagerCheckBox_Click(object sender, EventArgs e)
