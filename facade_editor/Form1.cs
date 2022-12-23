@@ -20,7 +20,7 @@ namespace facade_editor
     public partial class Form1 : Form
     {
         SynchronizationContext synchronizationContext; //this is needed for updating the UI while doing tasks on another thread
-        string version = "1.0.1";
+        string version = "1.0.1a";
         public Form1()
         {
             InitializeComponent();
@@ -692,7 +692,8 @@ namespace facade_editor
                             if (dontUseFilesFromBackupRadioButton.Checked)
                             {
                                 rndnames[j] = names[rndnumber - 1].Replace(@"animation", "animation_r");
-                                File.Move(names[j], rndnames[j]);
+                                //File.Move(names[j], rndnames[j]); There's an issue with this sometimes, using copy instead for now..
+                                File.Copy(names[j], rndnames[j],true);
                                 UpdateUI(names[j].Remove(0, names[j].IndexOf(@"animation\") + 10) + " to " + rndnames[j].Remove(0, rndnames[j].IndexOf(@"animation_r\") + 12) + " " + (j + 1) + "/" + i, "");
                             }
                             else
@@ -1487,7 +1488,7 @@ namespace facade_editor
         {
             DialogResult dialogResult = DialogResult.Yes;
             if (File.Exists(path + @"nlu\reaction\Proposer_GGreetsP.bin.jess") || File.Exists(path + @"nlu\reaction\Proposer_GlobalMixIn.bin.jess") || File.Exists(path + @"nlu\reaction\Proposer_TGreetsP.bin.jess"))
-                dialogResult = MessageBox.Show("Warning! This will overwrite the Proposer_GGreetsP.bin.jess, Proposer_GlobalMixIn.bin.jess, Proposer_TGreetsP.bin.jess files found in the nlu\\reaction folder! If you have modified them, make a backup first. \n\n\nIf you didn't modify them, or don't know what i'm talking about, just press yes to continue.", "Woah", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                dialogResult = MessageBox.Show("Warning! This will overwrite the Proposer_CrisisP1.bin.jess, Proposer_GGreetsP.bin.jess, Proposer_GlobalMixIn.bin.jess, Proposer_TGreetsP.bin.jess, Proposer_TherapyGameP2.bin.jess files found in the nlu\\reaction folder! If you have modified them, make a backup first. \n\n\nIf you didn't modify them, or don't know what i'm talking about, just press yes to continue.", "Woah", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
                 if (dialogResult == DialogResult.Yes)
                     try
@@ -1499,18 +1500,24 @@ namespace facade_editor
                                         File.Copy(@"files\Proposer_GGreetsP.bin", path + @"nlu\reaction\Proposer_GGreetsP.bin", true);
                                         File.Copy(@"files\Proposer_GlobalMixIn.bin", path + @"nlu\reaction\Proposer_GlobalMixIn.bin", true);
                                         File.Copy(@"files\Proposer_TGreetsP.bin", path + @"nlu\reaction\Proposer_TGreetsP.bin", true);
+                                        File.Copy(@"files\Proposer_CrisisP1.bin", path + @"nlu\reaction\Proposer_CrisisP1.bin", true);
+                                        File.Copy(@"files\Proposer_TherapyGameP2.bin", path + @"nlu\reaction\Proposer_TherapyGameP2.bin", true);
                                     }
                                     else
                                     {
                                         File.Copy(@"files\Proposer_GGreetsP_orig.bin", path + @"nlu\reaction\Proposer_GGreetsP.bin", true);
                                         File.Copy(@"files\Proposer_GlobalMixIn_orig.bin", path + @"nlu\reaction\Proposer_GlobalMixIn.bin", true);
                                         File.Copy(@"files\Proposer_TGreetsP_orig.bin", path + @"nlu\reaction\Proposer_TGreetsP.bin", true);
+                                        File.Copy(@"files\Proposer_CrisisP1_orig.bin", path + @"nlu\reaction\Proposer_CrisisP1.bin", true);
+                                        File.Copy(@"files\Proposer_TherapyGameP2_orig.bin", path + @"nlu\reaction\Proposer_TherapyGameP2.bin", true);
                                     }
                                     if (decompressedCheckBox.Checked || File.Exists(path + @"nlu\reaction\Proposer_GGreetsP.bin.jess") || File.Exists(path + @"nlu\reaction\Proposer_GlobalMixIn.bin.jess") || File.Exists(path + @"nlu\reaction\Proposer_TGreetsP.bin.jess"))
                                     {
                                         Decompress(path + @"nlu\reaction\Proposer_GGreetsP.bin");
                                         Decompress(path + @"nlu\reaction\Proposer_GlobalMixIn.bin");
                                         Decompress(path + @"nlu\reaction\Proposer_TGreetsP.bin");
+                                        Decompress(path + @"nlu\reaction\Proposer_TherapyGameP2.bin");
+                                        Decompress(path + @"nlu\reaction\Proposer_CrisisP1.bin");
                                     }
                                 }
                                 else { MessageBox.Show("Not the right path"); godModeCheckbox.Checked = false; }
