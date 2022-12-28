@@ -3,7 +3,7 @@ Randomizer, corruptor, and more for the game named Façade
 ![form](./screenshots/form.png)
 ## What does it do?
 
-- Randomize sounds, textures, cursors, animations
+- Randomize sounds, textures, cursors, animations, subtitles
 - Replace(mix in) your own sound files (supports automatic downsampling and mp3, ogg, wav files) 
 - Decompile .bin, .map, .rul files, some even has dev comments (All of them are written in Java Jess rule language)
 ![srcexample](./screenshots/srcexample.png)
