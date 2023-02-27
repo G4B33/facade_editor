@@ -68,6 +68,7 @@ namespace facade_editor
             this.replaceBrowseButton = new System.Windows.Forms.Button();
             this.replaceButton = new System.Windows.Forms.Button();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.syncCheckBox = new System.Windows.Forms.CheckBox();
             this.subtitlesCheckBox = new System.Windows.Forms.CheckBox();
             this.animationsHardCorruptionCheckBox = new System.Windows.Forms.CheckBox();
             this.label9 = new System.Windows.Forms.Label();
@@ -86,9 +87,11 @@ namespace facade_editor
             this.texturesCheckBox = new System.Windows.Forms.CheckBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.label14 = new System.Windows.Forms.Label();
+            this.fixLoadingCheckBox = new System.Windows.Forms.CheckBox();
+            this.label5 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.godModeCheckbox = new System.Windows.Forms.CheckBox();
-            this.label5 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.superSecretPictureBox)).BeginInit();
             this.tabPage4.SuspendLayout();
             this.tabPage3.SuspendLayout();
@@ -477,6 +480,7 @@ namespace facade_editor
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.syncCheckBox);
             this.tabPage1.Controls.Add(this.subtitlesCheckBox);
             this.tabPage1.Controls.Add(this.animationsHardCorruptionCheckBox);
             this.tabPage1.Controls.Add(this.label9);
@@ -503,6 +507,19 @@ namespace facade_editor
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Randomize";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // syncCheckBox
+            // 
+            this.syncCheckBox.AutoSize = true;
+            this.syncCheckBox.Enabled = false;
+            this.syncCheckBox.Location = new System.Drawing.Point(78, 129);
+            this.syncCheckBox.Name = "syncCheckBox";
+            this.syncCheckBox.Size = new System.Drawing.Size(113, 17);
+            this.syncCheckBox.TabIndex = 21;
+            this.syncCheckBox.Text = "Sync with subtitles";
+            this.syncCheckBox.UseVisualStyleBackColor = true;
+            this.syncCheckBox.Visible = false;
+            this.syncCheckBox.Click += new System.EventHandler(this.syncCheckBox_Click);
             // 
             // subtitlesCheckBox
             // 
@@ -652,6 +669,7 @@ namespace facade_editor
             this.soundsCheckBox.TabIndex = 5;
             this.soundsCheckBox.Text = "Sounds";
             this.soundsCheckBox.UseVisualStyleBackColor = true;
+            this.soundsCheckBox.Click += new System.EventHandler(this.soundsCheckBox_Click);
             // 
             // texturesCheckBox
             // 
@@ -680,6 +698,8 @@ namespace facade_editor
             // 
             // tabPage5
             // 
+            this.tabPage5.Controls.Add(this.label14);
+            this.tabPage5.Controls.Add(this.fixLoadingCheckBox);
             this.tabPage5.Controls.Add(this.label5);
             this.tabPage5.Controls.Add(this.label2);
             this.tabPage5.Controls.Add(this.godModeCheckbox);
@@ -690,6 +710,35 @@ namespace facade_editor
             this.tabPage5.TabIndex = 4;
             this.tabPage5.Text = "Fun";
             this.tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(4, 119);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(224, 13);
+            this.label14.TabIndex = 4;
+            this.label14.Text = "Finally, the period of long waiting times is over!";
+            // 
+            // fixLoadingCheckBox
+            // 
+            this.fixLoadingCheckBox.AutoSize = true;
+            this.fixLoadingCheckBox.Location = new System.Drawing.Point(6, 99);
+            this.fixLoadingCheckBox.Name = "fixLoadingCheckBox";
+            this.fixLoadingCheckBox.Size = new System.Drawing.Size(139, 17);
+            this.fixLoadingCheckBox.TabIndex = 3;
+            this.fixLoadingCheckBox.Text = "Fix the long loading time";
+            this.fixLoadingCheckBox.UseVisualStyleBackColor = true;
+            this.fixLoadingCheckBox.Click += new System.EventHandler(this.fixLoadingCheckBox_Click);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(6, 10);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(115, 13);
+            this.label5.TabIndex = 2;
+            this.label5.Text = "Mostly empty, for now..";
             // 
             // label2
             // 
@@ -712,15 +761,6 @@ namespace facade_editor
             this.godModeCheckbox.Text = "God mode";
             this.godModeCheckbox.UseVisualStyleBackColor = true;
             this.godModeCheckbox.Click += new System.EventHandler(this.godModeCheckbox_Click);
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(6, 10);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(115, 13);
-            this.label5.TabIndex = 2;
-            this.label5.Text = "Mostly empty, for now..";
             // 
             // Form1
             // 
@@ -810,6 +850,9 @@ namespace facade_editor
         private System.Windows.Forms.CheckBox godModeCheckbox;
         private System.Windows.Forms.CheckBox subtitlesCheckBox;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.CheckBox syncCheckBox;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.CheckBox fixLoadingCheckBox;
     }
 }
 

@@ -14,13 +14,14 @@ using NVorbis;
 using System.IO.Compression;
 using System.Diagnostics;
 using System.Security.Policy;
+using System.Reflection;
 
 namespace facade_editor
 {
     public partial class Form1 : Form
     {
         SynchronizationContext synchronizationContext; //this is needed for updating the UI while doing tasks on another thread
-        string version = "1.0.1a";
+        string version = "1.0.2";
         public Form1()
         {
             InitializeComponent();
@@ -95,16 +96,24 @@ namespace facade_editor
                 if (soundsCheckBox.Checked || texturesCheckBox.Checked || cursorsCheckBox.Checked || animationsCheckBox.Checked || subtitlesCheckBox.Checked)
                 {
                     removeTempFiles();
-                    if (soundsCheckBox.Checked) await randomizeSounds();
-                    if (texturesCheckBox.Checked) await randomizeTextures();
-                    if (cursorsCheckBox.Checked) await randomizeCursors();
+                    if (soundsCheckBox.Checked)
+                        await randomizeSounds();
+
+                    if (texturesCheckBox.Checked)
+                        await randomizeTextures();
+
+                    if (cursorsCheckBox.Checked)
+                        await randomizeCursors();
+
                     if (animationsCheckBox.Checked && animationsHardCorruptionCheckBox.Checked)
                         await randomizeAnimationsHard();
+
                     if (animationsCheckBox.Checked && !animationsHardCorruptionCheckBox.Checked)
                     {
                         await randomizeAnimations("grace");
                         await randomizeAnimations("trip");
                     }
+
                     if (subtitlesCheckBox.Checked)
                     {
                         await randomizeSubtitles("grace");
@@ -387,8 +396,8 @@ namespace facade_editor
 
             await Task.Run(() =>
             {
-                try
-                {
+               // try
+              //  {
                     UpdateUI("", "Randomizing Sounds..");
                     if (dontUseFilesFromBackupRadioButton.Checked)
                         foreach (string file in Directory.EnumerateFiles(path + @"Sounds", "*.wav", SearchOption.AllDirectories))
@@ -470,14 +479,67 @@ namespace facade_editor
                         Directory.Move(path + @"Sounds_r", path + @"Sounds");
                     }
                     UpdateUI(" ", "Succesfully randomized the sound files.");
-                }
-                catch (Exception ex)
-                {
-                    UpdateUI(" ", "Error randomizing sounds: " + ex.Message);
-                }
+                if (syncCheckBox.Checked)
+                    syncSubs(rndnames);
+                /* }
+                 catch (Exception ex)
+                 {
+                     UpdateUI(" ", "Error randomizing sounds: " + ex.Message);
+                 }*/
+
             });
 
 
+        }
+        void syncSubs(string[] rndnames)
+        {
+            UpdateUI(" ", "Syncing subtitles..");
+            int j = 0;
+            string[] origfilenames= new string[10000];
+            string[] origSubs = new string[10000];
+            string[] subIndex = new string[10000];
+            foreach (string line in File.ReadLines("Gracesubdone.txt"))
+            {
+                if (line.Contains('@'))
+                {
+                    origfilenames[j] = line.Remove(line.IndexOf('='));
+                    origSubs[j] = Substring2(line, line.IndexOf('=') + 1, line.IndexOf('@') - 1);
+                    j++;
+                }
+            }
+            foreach (string line in File.ReadLines("Tripsubdone.txt"))
+            {
+                if (line.Contains('@'))
+                {
+                    origfilenames[j] = line.Remove(line.IndexOf('='));
+                    origSubs[j] = Substring2(line, line.IndexOf('=') + 1, line.IndexOf('@') - 1);
+                    j++;
+                }
+            }
+            byte[] graceSubFile = File.ReadAllBytes(path + @"Backup\graceScript.sbinary");
+            byte[] tripSubFile = File.ReadAllBytes(path + @"Backup\graceScript.sbinary");
+            for (int k = 0; k < origfilenames.Length;k++)
+            {
+                try
+                {
+                    /*graceSubFile = ReplaceBytes(graceSubFile, convert(Encoding.ASCII.GetBytes(origSubs[k])), convert(Encoding.ASCII.GetBytes(origSubs[Array.IndexOf(origfilenames, rndnames[k].Substring(rndnames[k].IndexOf("Sounds_r\\") + 9) )])), 0);
+                    tripSubFile = ReplaceBytes(tripSubFile, convert(Encoding.ASCII.GetBytes(origSubs[k])), convert(Encoding.ASCII.GetBytes(origSubs[Array.IndexOf(origfilenames, rndnames[k].Substring(rndnames[k].IndexOf("Sounds_r\\") + 9) )])), 0);*/
+                    graceSubFile = ReplaceBytes(graceSubFile, convert(Encoding.ASCII.GetBytes(origSubs[Array.IndexOf(origfilenames, rndnames[k].Substring(rndnames[k].IndexOf("Sounds_r\\") + 9))])), convert(Encoding.ASCII.GetBytes(origSubs[k])), 0);
+                    tripSubFile = ReplaceBytes(tripSubFile, convert(Encoding.ASCII.GetBytes(origSubs[Array.IndexOf(origfilenames, rndnames[k].Substring(rndnames[k].IndexOf("Sounds_r\\") + 9))])), convert(Encoding.ASCII.GetBytes(origSubs[k])), 0);
+                    UpdateUI(Convert.ToString(k), "");
+                }
+                catch(Exception e) { 
+                   // MessageBox.Show(Convert.ToString(Array.IndexOf(origfilenames, rndnames[k].Substring(rndnames[k].IndexOf("Sounds_r\\") + 9))+ " + "+ rndnames[k]+e.Message+" "+k+" j"+j));
+                }
+            }
+            File.WriteAllBytes(path + @"animation\grace\graceScript.sbinary", graceSubFile);
+            File.WriteAllBytes(path + @"animation\trip\tripScript.sbinary", tripSubFile);
+            UpdateUI(" ", "Done");
+
+        }
+        string Substring2(string value, int startIndex, int endIndex)
+        {
+            return value.Substring(startIndex, (endIndex - startIndex + 1));
         }
 
         public void UpdateUI(string progress, string textboxmessage) // updates the textbox and label at the bottom
@@ -1202,6 +1264,12 @@ namespace facade_editor
             else
                 godModeCheckbox.Checked = true;
 
+            fileCompare = File.ReadAllText(path.Replace("sources", "classes") + @"characters\trip\java\Trip_Preconditions.class");
+            fileCompare2 = File.ReadAllText(@"files\Trip_Preconditions_orig.class");
+            if (fileCompare == fileCompare2)
+                fixLoadingCheckBox.Checked = false;
+            else
+                fixLoadingCheckBox.Checked = true;
         }
 
         private void dramaManagerCheckBox_Click(object sender, EventArgs e)
@@ -1471,7 +1539,31 @@ namespace facade_editor
                 }
             }
         }
+        private void fixLoadingCheckBox_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (path.Contains(@"sources"))
+                    if (fixLoadingCheckBox.Checked)
+                    {
+                        File.Copy(@"files\Trip_Preconditions.class", path.Replace("sources", "classes") + @"characters\trip\java\Trip_Preconditions.class", true);
+                    }
+                    else
+                        File.Copy(@"files\Trip_Preconditions_orig.class", path.Replace("sources", "classes") + @"characters\trip\java\Trip_Preconditions.class", true);
 
+                else
+                {
+                    MessageBox.Show("Not the right path");
+                    fixLoadingCheckBox.Checked = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error:" + ex.Message, "Oh no");
+                fixLoadingCheckBox.Checked = !fixLoadingCheckBox.Checked;
+            }
+
+        }
         private void animationsCheckBox_Click(object sender, EventArgs e)
         {
             animationsHardCorruptionCheckBox.Enabled = !animationsHardCorruptionCheckBox.Enabled;
@@ -1529,6 +1621,36 @@ namespace facade_editor
                     }
                 else godModeCheckbox.Checked = !godModeCheckbox.Checked;
         }
+
+        private void syncCheckBox_Click(object sender, EventArgs e)
+        {
+            if (syncCheckBox.Checked)
+            {
+                subtitlesCheckBox.Enabled = false;
+
+                if (subtitlesCheckBox.Checked)
+                    subtitlesCheckBox.Checked = false;
+            }
+            else
+                subtitlesCheckBox.Enabled = true;
+
+        }
+
+        private void soundsCheckBox_Click(object sender, EventArgs e)
+        {
+            if (soundsCheckBox.Checked)
+            {
+                syncCheckBox.Enabled = true;
+            }
+            else
+            {
+                syncCheckBox.Enabled = false;
+                syncCheckBox.Checked = false;
+                subtitlesCheckBox.Enabled = true;
+            }
+        }
+
+
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
