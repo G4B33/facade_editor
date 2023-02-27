@@ -1,14 +1,15 @@
 # Façade Editor
-Randomizer, corruptor, and more for the game named Façade
+Randomizer, corruptor, and more for the game called Façade
 ![form](./screenshots/form.png)
 ## What does it do?
 
 - Randomize sounds, textures, cursors, animations, subtitles
 - Replace(mix in) your own sound files (supports automatic downsampling and mp3, ogg, wav files) 
+- Fix the long loading time
 - Decompile .bin, .map, .rul files, some even has dev comments (All of them are written in Java Jess rule language)
 ![srcexample](./screenshots/srcexample.png)
 ![srcexample2](./screenshots/srcexample2.png)
-- Enable never seen before(?) built in debug features like "Drama manager monitor" or "AI Log" and more
+- Enables never seen before(?) built in debug features like "Drama manager monitor" or "AI Log" and more
 ![dmm](./screenshots/dmm.png)
 ![console](./screenshots/console.png)
 
