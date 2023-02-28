@@ -87,6 +87,8 @@ namespace facade_editor
             this.texturesCheckBox = new System.Windows.Forms.CheckBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.skipIntroCheckBox = new System.Windows.Forms.CheckBox();
+            this.label15 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
             this.fixLoadingCheckBox = new System.Windows.Forms.CheckBox();
             this.label5 = new System.Windows.Forms.Label();
@@ -160,7 +162,7 @@ namespace facade_editor
             // restoreButton
             // 
             this.restoreButton.Enabled = false;
-            this.restoreButton.Location = new System.Drawing.Point(513, 195);
+            this.restoreButton.Location = new System.Drawing.Point(511, 195);
             this.restoreButton.Name = "restoreButton";
             this.restoreButton.Size = new System.Drawing.Size(75, 23);
             this.restoreButton.TabIndex = 17;
@@ -632,7 +634,7 @@ namespace facade_editor
             // 
             // randomizeButton
             // 
-            this.randomizeButton.Location = new System.Drawing.Point(513, 237);
+            this.randomizeButton.Location = new System.Drawing.Point(511, 237);
             this.randomizeButton.Name = "randomizeButton";
             this.randomizeButton.Size = new System.Drawing.Size(75, 23);
             this.randomizeButton.TabIndex = 0;
@@ -652,7 +654,7 @@ namespace facade_editor
             // 
             // browseButton
             // 
-            this.browseButton.Location = new System.Drawing.Point(509, 54);
+            this.browseButton.Location = new System.Drawing.Point(511, 54);
             this.browseButton.Name = "browseButton";
             this.browseButton.Size = new System.Drawing.Size(75, 23);
             this.browseButton.TabIndex = 4;
@@ -698,6 +700,8 @@ namespace facade_editor
             // 
             // tabPage5
             // 
+            this.tabPage5.Controls.Add(this.skipIntroCheckBox);
+            this.tabPage5.Controls.Add(this.label15);
             this.tabPage5.Controls.Add(this.label14);
             this.tabPage5.Controls.Add(this.fixLoadingCheckBox);
             this.tabPage5.Controls.Add(this.label5);
@@ -710,6 +714,26 @@ namespace facade_editor
             this.tabPage5.TabIndex = 4;
             this.tabPage5.Text = "Fun";
             this.tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // skipIntroCheckBox
+            // 
+            this.skipIntroCheckBox.AutoSize = true;
+            this.skipIntroCheckBox.Location = new System.Drawing.Point(189, 133);
+            this.skipIntroCheckBox.Name = "skipIntroCheckBox";
+            this.skipIntroCheckBox.Size = new System.Drawing.Size(147, 17);
+            this.skipIntroCheckBox.TabIndex = 6;
+            this.skipIntroCheckBox.Text = "skipping the intro as well?";
+            this.skipIntroCheckBox.UseVisualStyleBackColor = true;
+            this.skipIntroCheckBox.Click += new System.EventHandler(this.skipIntroCheckBox_Click);
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(4, 134);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(186, 13);
+            this.label15.TabIndex = 5;
+            this.label15.Text = "Still not fast enough? Well, how about";
             // 
             // label14
             // 
@@ -853,6 +877,8 @@ namespace facade_editor
         private System.Windows.Forms.CheckBox syncCheckBox;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.CheckBox fixLoadingCheckBox;
+        private System.Windows.Forms.CheckBox skipIntroCheckBox;
+        private System.Windows.Forms.Label label15;
     }
 }
 

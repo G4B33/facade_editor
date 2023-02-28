@@ -21,7 +21,7 @@ namespace facade_editor
     public partial class Form1 : Form
     {
         SynchronizationContext synchronizationContext; //this is needed for updating the UI while doing tasks on another thread
-        string version = "1.0.2";
+        string version = "1.0.3";
         public Form1()
         {
             InitializeComponent();
@@ -1267,9 +1267,29 @@ namespace facade_editor
             fileCompare = File.ReadAllText(path.Replace("sources", "classes") + @"characters\trip\java\Trip_Preconditions.class");
             fileCompare2 = File.ReadAllText(@"files\Trip_Preconditions_orig.class");
             if (fileCompare == fileCompare2)
+            {
+                skipIntroCheckBox.Enabled = false;
                 fixLoadingCheckBox.Checked = false;
+            }
             else
+            {
+                skipIntroCheckBox.Enabled = true;
                 fixLoadingCheckBox.Checked = true;
+            }
+
+            fileCompare = File.ReadAllText(path.Replace("sources", "classes") + @"characters\trip\java\Trip_Preconditions.class");
+            fileCompare2 = File.ReadAllText(@"files\Trip_Preconditions_skipintro.class");
+            if (fileCompare == fileCompare2)
+            {
+                skipIntroCheckBox.Checked = true;
+                skipIntroCheckBox.Enabled = true;
+            }
+            else
+            {
+                skipIntroCheckBox.Checked = false;
+            }
+
+
         }
 
         private void dramaManagerCheckBox_Click(object sender, EventArgs e)
@@ -1547,9 +1567,15 @@ namespace facade_editor
                     if (fixLoadingCheckBox.Checked)
                     {
                         File.Copy(@"files\Trip_Preconditions.class", path.Replace("sources", "classes") + @"characters\trip\java\Trip_Preconditions.class", true);
+                        skipIntroCheckBox.Enabled = true;
+
                     }
                     else
+                    {
                         File.Copy(@"files\Trip_Preconditions_orig.class", path.Replace("sources", "classes") + @"characters\trip\java\Trip_Preconditions.class", true);
+                        skipIntroCheckBox.Enabled = false;
+                        skipIntroCheckBox.Checked = false;
+                    }
 
                 else
                 {
@@ -1650,7 +1676,36 @@ namespace facade_editor
             }
         }
 
+        private void skipIntroCheckBox_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (path.Contains(@"sources"))
+                    if (skipIntroCheckBox.Checked)
+                    {
+                        File.Copy(@"files\Trip_Preconditions_skipintro.class", path.Replace("sources", "classes") + @"characters\trip\java\Trip_Preconditions.class", true);
 
+                    }
+                    else
+                    {
+                        if(fixLoadingCheckBox.Checked)
+                            File.Copy(@"files\Trip_Preconditions.class", path.Replace("sources", "classes") + @"characters\trip\java\Trip_Preconditions.class", true);
+                        else
+                            File.Copy(@"files\Trip_Preconditions_orig.class", path.Replace("sources", "classes") + @"characters\trip\java\Trip_Preconditions.class", true);
+                    }
+
+                else
+                {
+                    MessageBox.Show("Not the right path");
+                    skipIntroCheckBox.Checked = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error:" + ex.Message, "Oh no");
+                skipIntroCheckBox.Checked = !skipIntroCheckBox.Checked;
+            }
+        }
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
