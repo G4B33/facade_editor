@@ -87,6 +87,7 @@ namespace facade_editor
             this.texturesCheckBox = new System.Windows.Forms.CheckBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.spawnInTheRoomCheckBox = new System.Windows.Forms.CheckBox();
             this.skipIntroCheckBox = new System.Windows.Forms.CheckBox();
             this.label15 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
@@ -700,6 +701,7 @@ namespace facade_editor
             // 
             // tabPage5
             // 
+            this.tabPage5.Controls.Add(this.spawnInTheRoomCheckBox);
             this.tabPage5.Controls.Add(this.skipIntroCheckBox);
             this.tabPage5.Controls.Add(this.label15);
             this.tabPage5.Controls.Add(this.label14);
@@ -714,6 +716,17 @@ namespace facade_editor
             this.tabPage5.TabIndex = 4;
             this.tabPage5.Text = "Fun";
             this.tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // spawnInTheRoomCheckBox
+            // 
+            this.spawnInTheRoomCheckBox.AutoSize = true;
+            this.spawnInTheRoomCheckBox.Location = new System.Drawing.Point(6, 165);
+            this.spawnInTheRoomCheckBox.Name = "spawnInTheRoomCheckBox";
+            this.spawnInTheRoomCheckBox.Size = new System.Drawing.Size(166, 17);
+            this.spawnInTheRoomCheckBox.TabIndex = 7;
+            this.spawnInTheRoomCheckBox.Text = "Start in the middle of the room";
+            this.spawnInTheRoomCheckBox.UseVisualStyleBackColor = true;
+            this.spawnInTheRoomCheckBox.Click += new System.EventHandler(this.spawnInTheRoomCheckBox_Click);
             // 
             // skipIntroCheckBox
             // 
@@ -879,6 +892,7 @@ namespace facade_editor
         private System.Windows.Forms.CheckBox fixLoadingCheckBox;
         private System.Windows.Forms.CheckBox skipIntroCheckBox;
         private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.CheckBox spawnInTheRoomCheckBox;
     }
 }
 

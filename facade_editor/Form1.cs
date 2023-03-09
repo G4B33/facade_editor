@@ -15,13 +15,15 @@ using System.IO.Compression;
 using System.Diagnostics;
 using System.Security.Policy;
 using System.Reflection;
+using System.Net;
+using System.Text.Json.Nodes;
 
 namespace facade_editor
 {
     public partial class Form1 : Form
     {
         SynchronizationContext synchronizationContext; //this is needed for updating the UI while doing tasks on another thread
-        string version = "1.0.3";
+        string version = "1.0.4";
         public Form1()
         {
             InitializeComponent();
@@ -31,12 +33,12 @@ namespace facade_editor
                 Text = "Façade editor (Admin rights) " + version;
             else 
                 Text = "Façade editor " + version;
-
+            checkNewVersion();
         }
         string[] names = new string[100000]; //used for storing path for the files to randomize, yes I will change it to list or something else later
-        string path = @""; //path to game
+        string path = ""; //path to game
         int i = 0; //used for a lot of things, sorry will fix this sometime
-
+        string newVersionNumber = ""; //used if there's a new version
         async void initializeAndReadSettings()
         {
             if (File.Exists("settings.cfg"))
@@ -55,6 +57,30 @@ namespace facade_editor
                 }
             }
 
+        }
+
+        async Task checkNewVersion()
+        {
+             try
+             {
+            await Task.Run(() =>
+                {
+                    WebClient client = new WebClient();
+                    client.Headers.Add("user-agent", "G4B33 facade_editor");
+                    string reply = client.DownloadString("https://api.github.com/repos/G4B33/facade_editor/releases/latest");
+                    var gitHubApi = JsonNode.Parse(reply);
+                    if((string)gitHubApi["name"].ToString().Substring(1) != version)
+                    {
+                        newVersionNumber += " - New version available: "+ (string)gitHubApi["name"].ToString().Substring(1);
+                        UpdateUI("", "New version ("+ (string)gitHubApi["name"].ToString().Substring(1) + ") is available with the next changes:");
+                        UpdateUI("", (string)gitHubApi["body"]);
+                        UpdateUI("", "Go to the About tab to download the update");
+                        linkLabel2.Text += " - Click here to get "+ (string)gitHubApi["name"];
+                    }
+                });
+            }
+            catch { UpdateUI("","Couldn't check for new version"); }
+            Text += newVersionNumber;
         }
 
         async Task removeReadOnly() //I have to remove the read-only attributes, otherwise the program sometimes can't access them
@@ -1091,7 +1117,6 @@ namespace facade_editor
                         UpdateUIReplaceTab(customSoundNames[j] + " " + (j + 1) + "/" + customSoundCount, "");
                     }
 
-                    UpdateUI("", "Replacing Sounds..");
                     if (graceCheckBox.Checked)
                         foreach (string file in Directory.EnumerateFiles(path + @"Sounds\grace", "*.wav", SearchOption.AllDirectories))
                         {
@@ -1289,6 +1314,17 @@ namespace facade_editor
                 skipIntroCheckBox.Checked = false;
             }
 
+            fileCompare = File.ReadAllText(path.Replace("sources", "classes") + @"primact\SetPlayerPosition.class");
+            fileCompare2 = File.ReadAllText(@"files\SetPlayerPosition.class");
+            if (fileCompare == fileCompare2)
+            {
+                spawnInTheRoomCheckBox.Checked = true;
+                spawnInTheRoomCheckBox.Enabled = true;
+            }
+            else
+            {
+                spawnInTheRoomCheckBox.Checked = false;
+            }
 
         }
 
@@ -1707,6 +1743,28 @@ namespace facade_editor
             }
         }
 
+        private void spawnInTheRoomCheckBox_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (path.Contains(@"sources"))
+                    if (spawnInTheRoomCheckBox.Checked)
+                        File.Copy(@"files\SetPlayerPosition.class", path.Replace("sources", "classes") + @"primact\SetPlayerPosition.class", true);
+                    else
+                        File.Copy(@"files\SetPlayerPosition_orig.class", path.Replace("sources", "classes") + @"primact\SetPlayerPosition.class", true);
+                else
+                {
+                    MessageBox.Show("Not the right path");
+                    spawnInTheRoomCheckBox.Checked = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error:" + ex.Message, "Oh no");
+                spawnInTheRoomCheckBox.Checked = !spawnInTheRoomCheckBox.Checked;
+            }
+        }
+
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             MessageBox.Show("I used JD-GUI for decompiling, that gave me the best results. Unfortunately I haven't found any way to recompile them, so that's for reading only. I used bytecode editing on the compiled files instad, I used a program called Recaf for that. To decompile all the class files, open up Facade\\util\\classes\\facade\\Main.class with JD-GUI.", "Info");
@@ -1714,8 +1772,13 @@ namespace facade_editor
 
         private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (MessageBox.Show(@"Open up this program's GitHub repository?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-                Process.Start(@"https://github.com/G4B33/facade_editor");
+            if (newVersionNumber == "")
+                if (MessageBox.Show(@"Open up this program's GitHub repository?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    Process.Start(@"https://github.com/G4B33/facade_editor");
+                else;
+            else
+                if (MessageBox.Show(@"Open up the new version's download page?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                Process.Start(@"https://github.com/G4B33/facade_editor/releases");
         }
 
 
