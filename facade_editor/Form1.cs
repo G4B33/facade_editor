@@ -17,13 +17,14 @@ using System.Security.Policy;
 using System.Reflection;
 using System.Net;
 using System.Text.Json.Nodes;
+using System.Collections.Generic;
 
 namespace facade_editor
 {
     public partial class Form1 : Form
     {
         SynchronizationContext synchronizationContext; //this is needed for updating the UI while doing tasks on another thread
-        string version = "1.0.4";
+        string version = "1.0.5";
         public Form1()
         {
             InitializeComponent();
@@ -256,6 +257,8 @@ namespace facade_editor
             globalCheckBox.Enabled = false;
             chanceCheckBox.Enabled = false;
             chanceTextBox.Enabled = false;
+            subtitlesCheckBox.Enabled = false;
+            syncSubsCheckBox.Enabled = false;
         }
         void enableButtonsAndStuff()
         {
@@ -285,6 +288,9 @@ namespace facade_editor
             chanceCheckBox.Enabled = true;
             if (chanceCheckBox.Checked)
                 chanceTextBox.Enabled = true;
+            subtitlesCheckBox.Enabled = true;
+            if(subtitlesCheckBox.Checked)
+                syncSubsCheckBox.Enabled = true;
         }
         async Task GenerateBackup()
         {
@@ -411,9 +417,9 @@ namespace facade_editor
                 File.Copy(newPath, newPath.Replace(sourcePath, targetPath), true);
 
                 if (restoreOrBackup=="restore")
-                    UpdateUI("Restoring " + newPath + "..", "");
+                    UpdateUI("Restoring " + newPath.Replace(path+"Backup\\","") + "..", "");
                 if (restoreOrBackup == "backup")
-                    UpdateUI("Backing up " + newPath + "..", "");
+                    UpdateUI("Backing up " + newPath.Replace(path,"") + "..", "");
             }
         }
         async Task randomizeSounds()
@@ -422,8 +428,8 @@ namespace facade_editor
 
             await Task.Run(() =>
             {
-               // try
-              //  {
+                try
+                {
                     UpdateUI("", "Randomizing Sounds..");
                     if (dontUseFilesFromBackupRadioButton.Checked)
                         foreach (string file in Directory.EnumerateFiles(path + @"Sounds", "*.wav", SearchOption.AllDirectories))
@@ -505,19 +511,17 @@ namespace facade_editor
                         Directory.Move(path + @"Sounds_r", path + @"Sounds");
                     }
                     UpdateUI(" ", "Succesfully randomized the sound files.");
-                if (syncCheckBox.Checked)
-                    syncSubs(rndnames);
-                /* }
+                 }
                  catch (Exception ex)
                  {
                      UpdateUI(" ", "Error randomizing sounds: " + ex.Message);
-                 }*/
+                 }
 
             });
 
 
         }
-        void syncSubs(string[] rndnames)
+       /* void syncSubs(string[] rndnames)
         {
             UpdateUI(" ", "Syncing subtitles..");
             int j = 0;
@@ -548,21 +552,21 @@ namespace facade_editor
             {
                 try
                 {
-                    /*graceSubFile = ReplaceBytes(graceSubFile, convert(Encoding.ASCII.GetBytes(origSubs[k])), convert(Encoding.ASCII.GetBytes(origSubs[Array.IndexOf(origfilenames, rndnames[k].Substring(rndnames[k].IndexOf("Sounds_r\\") + 9) )])), 0);
-                    tripSubFile = ReplaceBytes(tripSubFile, convert(Encoding.ASCII.GetBytes(origSubs[k])), convert(Encoding.ASCII.GetBytes(origSubs[Array.IndexOf(origfilenames, rndnames[k].Substring(rndnames[k].IndexOf("Sounds_r\\") + 9) )])), 0);*/
-                    graceSubFile = ReplaceBytes(graceSubFile, convert(Encoding.ASCII.GetBytes(origSubs[Array.IndexOf(origfilenames, rndnames[k].Substring(rndnames[k].IndexOf("Sounds_r\\") + 9))])), convert(Encoding.ASCII.GetBytes(origSubs[k])), 0);
-                    tripSubFile = ReplaceBytes(tripSubFile, convert(Encoding.ASCII.GetBytes(origSubs[Array.IndexOf(origfilenames, rndnames[k].Substring(rndnames[k].IndexOf("Sounds_r\\") + 9))])), convert(Encoding.ASCII.GetBytes(origSubs[k])), 0);
+                    /*graceSubFile = ReplaceBytes(graceSubFile, convert(Encoding.ASCII.GetBytes(origSubs[Array.IndexOf(origfilenames, rndnames[k].Substring(rndnames[k].IndexOf("Sounds_r\\") + 9))])), convert(Encoding.ASCII.GetBytes(origSubs[k])), 0);
+                    tripSubFile = ReplaceBytes(tripSubFile, convert(Encoding.ASCII.GetBytes(origSubs[Array.IndexOf(origfilenames, rndnames[k].Substring(rndnames[k].IndexOf("Sounds_r\\") + 9))])), convert(Encoding.ASCII.GetBytes(origSubs[k])), 0);*/
+              /*      graceSubFile = replaceSub(graceSubFile, convert(Encoding.ASCII.GetBytes(origSubs[Array.IndexOf(origfilenames, rndnames[k].Substring(rndnames[k].IndexOf("Sounds_r\\") + 9))])), convert(Encoding.ASCII.GetBytes(origSubs[k])), 0);
+                    tripSubFile = replaceSub(tripSubFile, convert(Encoding.ASCII.GetBytes(origSubs[Array.IndexOf(origfilenames, rndnames[k].Substring(rndnames[k].IndexOf("Sounds_r\\") + 9))])), convert(Encoding.ASCII.GetBytes(origSubs[k])), 0);
                     UpdateUI(Convert.ToString(k), "");
                 }
-                catch(Exception e) { 
-                   // MessageBox.Show(Convert.ToString(Array.IndexOf(origfilenames, rndnames[k].Substring(rndnames[k].IndexOf("Sounds_r\\") + 9))+ " + "+ rndnames[k]+e.Message+" "+k+" j"+j));
+                catch(Exception e) {
+                    // MessageBox.Show(Convert.ToString(Array.IndexOf(origfilenames, rndnames[k].Substring(rndnames[k].IndexOf("Sounds_r\\") + 9))+ " + "+ rndnames[k]+e.Message+" "+k+" j"+j));
                 }
             }
             File.WriteAllBytes(path + @"animation\grace\graceScript.sbinary", graceSubFile);
             File.WriteAllBytes(path + @"animation\trip\tripScript.sbinary", tripSubFile);
             UpdateUI(" ", "Done");
 
-        }
+        }*/
         string Substring2(string value, int startIndex, int endIndex)
         {
             return value.Substring(startIndex, (endIndex - startIndex + 1));
@@ -834,6 +838,7 @@ namespace facade_editor
                     string[] subtitles = new string[10000];
                     int[] indexes = new int[10000];
                     int counter = 0;
+                    int rndNumber;
                     Random r = new Random();
                     foreach (string line in File.ReadLines(path + who + "SubnonumberIndex.txt"))
                     {
@@ -841,18 +846,99 @@ namespace facade_editor
                         indexes[counter] = Convert.ToInt32(line.Remove(0, line.IndexOf('=') + 1));
                         counter++;
                     }
-                    for (int i = 0; i < counter; i++)
+
+
+                    int j = 0;
+                    string[] origfilepaths = new string[10000];
+                    string[] origSubs = new string[10000];
+                    string[] origID = new string[10000];
+                    if (syncSubsCheckBox.Checked)
+                    {
+                        
+                        
+                        foreach (string line in File.ReadLines(char.ToUpper(who[0]) + who.Substring(1) + "subdone.txt"))
+                        {
+                            if (line.Contains('@'))
+                            {
+                                origfilepaths[j] = line.Remove(line.IndexOf('='));
+                                origSubs[j] = Substring2(line, line.IndexOf('=') + 1, line.IndexOf('@') - 1);
+                                origID[j] = line.Substring(line.IndexOf('@')+1);
+                                j++;
+                            }
+                        }
+                    }
+
+                    if (syncSubsCheckBox.Checked && who == "grace")
+                    {
+                        Directory.Delete(path + @"Sounds\grace", true);
+                        Directory.Delete(path + @"Sounds\trip", true);
+                        Directory.CreateDirectory(path + @"Sounds\grace");
+                        Directory.CreateDirectory(path + @"Sounds\grace\01");
+                        Directory.CreateDirectory(path + @"Sounds\grace\02");
+                        Directory.CreateDirectory(path + @"Sounds\grace\03");
+                        Directory.CreateDirectory(path + @"Sounds\grace\04");
+                        Directory.CreateDirectory(path + @"Sounds\grace\05");
+                        Directory.CreateDirectory(path + @"Sounds\grace\06");
+                        Directory.CreateDirectory(path + @"Sounds\grace\07");
+                        Directory.CreateDirectory(path + @"Sounds\grace\08");
+                        Directory.CreateDirectory(path + @"Sounds\grace\09");
+                        Directory.CreateDirectory(path + @"Sounds\trip");
+                        Directory.CreateDirectory(path + @"Sounds\trip\01");
+                        Directory.CreateDirectory(path + @"Sounds\trip\02");
+                        Directory.CreateDirectory(path + @"Sounds\trip\03");
+                        Directory.CreateDirectory(path + @"Sounds\trip\04");
+                        Directory.CreateDirectory(path + @"Sounds\trip\05");
+                        Directory.CreateDirectory(path + @"Sounds\trip\06");
+                        Directory.CreateDirectory(path + @"Sounds\trip\07");
+                        Directory.CreateDirectory(path + @"Sounds\trip\08");
+                        Directory.CreateDirectory(path + @"Sounds\trip\09");
+                        Directory.CreateDirectory(path + @"Sounds\trip\10");
+                        File.Copy(path + @"Backup\Sounds\grace\gracesnd.txt", path + @"Sounds\grace\gracesnd.txt");
+                        File.Copy(path + @"Backup\Sounds\trip\tripsnd.txt", path + @"Sounds\trip\tripsnd.txt");
+                    }
+
+                    int a = 0, b = 0;
+
+                    for (int i = counter-1; i >= 0; i--)
                         try
                         {
-                            subFile = ReplaceBytes(subFile, convert(Encoding.ASCII.GetBytes(subtitles[i])), convert(Encoding.ASCII.GetBytes(subtitles[r.Next(0, counter)])), indexes[i]);
+
+                            rndNumber = r.Next(0, counter);
+                            subFile = replaceSub(subFile, convert(Encoding.ASCII.GetBytes(subtitles[i])), convert(Encoding.ASCII.GetBytes(subtitles[rndNumber])), indexes[i] - convert(Encoding.ASCII.GetBytes(subtitles[i])).Length);
+                            
+                            if (syncSubsCheckBox.Checked)
+                            {
+                                for (int k = 0; k < j; k++)
+                                {
+                                    if (Convert.ToString(indexes[i]) == origID[k])
+                                    {
+                                        a = k;
+                                    }
+                                    if (Convert.ToString(indexes[rndNumber]) == origID[k])
+                                    {
+                                        b = k;
+                                    }
+                                   //MessageBox.Show(Convert.ToString(indexes[i]) + " " + origID[k]+"\n"+Convert.ToString(j)+"\n"+ Convert.ToString(k));
+                                   // MessageBox.Show(Convert.ToString(indexes[rndNumber]) + " " + origID[k]);
+                                }
+                                if(a!=0&&b!=0)
+                                {
+                                    //MessageBox.Show(subtitles[i] + " = " + subtitles[rndNumber] + "\n" + origfilepaths[a] +" = " + origfilepaths[b]);
+                                    File.Copy(path+@"Backup\Sounds\"+origfilepaths[b], path+@"Sounds\"+origfilepaths[a], true);
+                                    a = 0; b = 0;
+                                }
+                            }
+
+
+                            UpdateUI((i-counter)*-1 + "/" + counter, "");
                         }
                         catch (Exception e) { UpdateUI("", "error " + subtitles[i] + " " + e.Message); }
                     File.WriteAllBytes(path + @"animation\" + who + @"\" + who + @"Script.sbinary", subFile);
-                    UpdateUI("", char.ToUpper(who[0]) + who.Substring(1) + "'s subtitles randomized succesfully.");
+                        UpdateUI(" ", char.ToUpper(who[0]) + who.Substring(1) + "'s subtitles randomized succesfully.");
                 }
                 catch(Exception e)
                 {
-                    UpdateUI("","Error randomizing " + char.ToUpper(who[0]) + who.Substring(1) + "'s subtitles: " + e.Message);
+                    UpdateUI(" ","Error randomizing " + char.ToUpper(who[0]) + who.Substring(1) + "'s subtitles: " + e.Message);
                 }
             });
             try
@@ -870,7 +956,7 @@ namespace facade_editor
             int index = 0;
             byte[] subs = new byte[subFile.Length];
             int[] startsFromIndex = new int[10000];
-            startsFromIndex[0] = 8242;
+            startsFromIndex[0] = 8244;
             int startsFromIndexIndex = 1;
 
             for (int i = 0; i < subs.Length; i++)
@@ -895,13 +981,13 @@ namespace facade_editor
             int counter = 0;
             string tobewritten = "";
             startsFromIndexIndex = 0;
+            int linenum = 0;
             foreach (string line in File.ReadLines(path + @"graceScript.txt"))
             {
-
+                linenum++;
                 if (counter % 2 == 1 || counter == 1724 || counter == 2238 || counter == 2750 || counter == 2752 || counter == 3264 || counter == 3266 || counter == 3776 || counter == 3778 || counter == 3780 || counter == 4290 || counter == 4292 || counter == 4294 || counter == 4802 || counter == 4804 || counter == 4806 || counter == 4808 || counter == 5316 || counter == 5318 || counter == 5320 || counter == 5322 || counter == 5828 || counter == 5830 || counter == 5832 || counter == 5834 || counter == 5836 || counter == 6342 || counter == 6344 || counter == 6346 || counter == 6348 || counter == 6350 || counter == 6856 || counter == 6858 || counter == 6860 || counter == 6862 || counter == 6864 || counter == 7368 || counter == 7370 || counter == 7372 || counter == 7374 || counter == 7376 || counter == 7378 || counter == 7880 || counter == 7882 || counter == 7884 || counter == 7886 || counter == 7888 || counter == 7890 || counter == 7892)
                 {
-                    //Console.WriteLine(line);
-                    tobewritten += line + "=" + startsFromIndex[startsFromIndexIndex] + Environment.NewLine;
+                    tobewritten += line + "=" + startsFromIndex[linenum] + Environment.NewLine;
 
                 }
                 if (counter == 183 || counter == 696 || counter == 1209 || counter == 1722 || counter == 2235 || counter == 2748 || counter == 3262 || counter == 3774 || counter == 4287 || counter == 4800 || counter == 5313 || counter == 5826 || counter == 6339 || counter == 6853 || counter == 7365 || counter == 7878)
@@ -944,12 +1030,14 @@ namespace facade_editor
             int counter = 0;
             string tobewritten = "";
             startsFromIndexIndex = 0;
+            int linenum = 0;
             foreach (string line in File.ReadLines(path + "tripScript.txt"))
             {
+                linenum++;
                 if (counter % 2 == 1 || counter == 2038 || counter == 2552 || counter == 3064 || counter == 3066 || counter == 3578 || counter == 3580 || counter == 4090 || counter == 4092 || counter == 4094 || counter == 4602 || counter == 4604 || counter == 4606 || counter == 4608 || counter == 5116 || counter == 5118 || counter == 5120 || counter == 5122 || counter == 5630 || counter == 5632 || counter == 5634 || counter == 5636 || counter == 6142 || counter == 6144 || counter == 6146 || counter == 6148 || counter == 6150 || counter == 6654 || counter == 6656 || counter == 6658 || counter == 6660 || counter == 6662 || counter == 6664 || counter == 7168 || counter == 7170 || counter == 7172 || counter == 7174 || counter == 7176 || counter == 7178 || counter == 7680 || counter == 7682 || counter == 7684 || counter == 7686 || counter == 7688 || counter == 7690 || counter == 7692 || counter == 8194 || counter == 8196 || counter == 8198 || counter == 8200 || counter == 8202 || counter == 8204 || counter == 8206 || counter == 8706 || counter == 8708 || counter == 8710 || counter == 8712 || counter == 8714 || counter == 8716 || counter == 8718 || counter == 8720)
                 {
                     //Console.WriteLine(line);
-                    tobewritten += line + "=" + startsFromIndex[startsFromIndexIndex] + Environment.NewLine;
+                    tobewritten += line + "=" + startsFromIndex[linenum] + Environment.NewLine;
                 }
                 if (counter == 497 || counter == 1010 || counter == 1523 || counter == 2036 || counter == 2549 || counter == 3062 || counter == 3575 || counter == 4088 || counter == 4601 || counter == 5114 || counter == 5628 || counter == 6140 || counter == 6653 || counter == 7166 || counter == 7679 || counter == 8192 || counter == 8705)
                 {
@@ -1528,6 +1616,7 @@ namespace facade_editor
             }
             return index;
         }
+
         static byte[] ReplaceBytes(byte[] src, byte[] search, byte[] repl, int startIndex)
         {
             try
@@ -1557,6 +1646,70 @@ namespace facade_editor
 
             }
             catch { return src; }
+        }
+        byte[] replaceSub(byte[] src, byte[] search, byte[] repl, int startIndex)
+        {
+            try
+            {
+                byte[] dst = null;
+
+                int index = startIndex;
+                if (index >= 0)
+                {
+                    dst = new byte[src.Length - search.Length + repl.Length];
+                    // before found array
+                    Buffer.BlockCopy(src, 0, dst, 0, index);
+                    // repl copy
+                    Buffer.BlockCopy(repl, 0, dst, index, repl.Length);
+                    // rest of src array
+                    Buffer.BlockCopy(
+                        src,
+                        index + search.Length,
+                        dst,
+                        index + repl.Length,
+                        src.Length - (index + search.Length));
+                    return dst;
+                }
+                else return src;
+
+
+
+            }
+            catch { return src; }
+        }
+        byte[] replaceSub2(byte[] input, byte[] pattern, byte[] replacement, int startIndex)
+        {
+            try
+            {
+                if (pattern.Length == 0)
+                {
+                    return input;
+                }
+
+                List<byte> result = new List<byte>();
+
+                int aindex =0;
+                
+                for(aindex = 0; aindex < startIndex; aindex++)
+                   result.Add(input[aindex]);
+                
+                for(int replacementIndex=0; replacementIndex < replacement.Length; replacementIndex++)
+                    result.Add(replacement[replacementIndex]);
+                //aindex = startIndex + pattern.Length;
+                //index = startIndex+pattern.Length;
+
+                for (; aindex < input.Length; aindex++)
+                {
+                    result.Add(input[aindex]);
+                }
+
+                return result.ToArray();
+            }
+            catch (Exception e)
+            {
+                UpdateUI("","Error: " + e.Message);
+                return input;
+            }
         }
 
         private void javaDebugCheckBox_Click(object sender, EventArgs e)
@@ -1684,30 +1837,15 @@ namespace facade_editor
                 else godModeCheckbox.Checked = !godModeCheckbox.Checked;
         }
 
-        private void syncCheckBox_Click(object sender, EventArgs e)
-        {
-            if (syncCheckBox.Checked)
-            {
-                subtitlesCheckBox.Enabled = false;
-
-                if (subtitlesCheckBox.Checked)
-                    subtitlesCheckBox.Checked = false;
-            }
-            else
-                subtitlesCheckBox.Enabled = true;
-
-        }
 
         private void soundsCheckBox_Click(object sender, EventArgs e)
         {
             if (soundsCheckBox.Checked)
             {
-                syncCheckBox.Enabled = true;
+                syncSubsCheckBox.Checked = false;
             }
             else
             {
-                syncCheckBox.Enabled = false;
-                syncCheckBox.Checked = false;
                 subtitlesCheckBox.Enabled = true;
             }
         }
@@ -1762,6 +1900,27 @@ namespace facade_editor
             {
                 MessageBox.Show("Error:" + ex.Message, "Oh no");
                 spawnInTheRoomCheckBox.Checked = !spawnInTheRoomCheckBox.Checked;
+            }
+        }
+
+        private void syncSubsCheckBox_Click(object sender, EventArgs e)
+        {
+            if(syncSubsCheckBox.Checked)
+            {
+                MessageBox.Show("This is a test feature, the syncing is not perfect yet. You need to have a clean backup generated already for this to work!","Test feature",MessageBoxButtons.OK,MessageBoxIcon.Warning);
+                soundsCheckBox.Checked = false;
+            }
+            
+        }
+
+        private void subtitlesCheckBox_Click(object sender, EventArgs e)
+        {
+            if (subtitlesCheckBox.Checked)
+                syncSubsCheckBox.Enabled = true;
+            else
+            {
+                syncSubsCheckBox.Enabled = false;
+                syncSubsCheckBox.Checked = false;
             }
         }
 

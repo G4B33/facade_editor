@@ -68,7 +68,7 @@ namespace facade_editor
             this.replaceBrowseButton = new System.Windows.Forms.Button();
             this.replaceButton = new System.Windows.Forms.Button();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.syncCheckBox = new System.Windows.Forms.CheckBox();
+            this.syncSubsCheckBox = new System.Windows.Forms.CheckBox();
             this.subtitlesCheckBox = new System.Windows.Forms.CheckBox();
             this.animationsHardCorruptionCheckBox = new System.Windows.Forms.CheckBox();
             this.label9 = new System.Windows.Forms.Label();
@@ -483,7 +483,7 @@ namespace facade_editor
             // 
             // tabPage1
             // 
-            this.tabPage1.Controls.Add(this.syncCheckBox);
+            this.tabPage1.Controls.Add(this.syncSubsCheckBox);
             this.tabPage1.Controls.Add(this.subtitlesCheckBox);
             this.tabPage1.Controls.Add(this.animationsHardCorruptionCheckBox);
             this.tabPage1.Controls.Add(this.label9);
@@ -511,28 +511,28 @@ namespace facade_editor
             this.tabPage1.Text = "Randomize";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
-            // syncCheckBox
+            // syncSubsCheckBox
             // 
-            this.syncCheckBox.AutoSize = true;
-            this.syncCheckBox.Enabled = false;
-            this.syncCheckBox.Location = new System.Drawing.Point(78, 129);
-            this.syncCheckBox.Name = "syncCheckBox";
-            this.syncCheckBox.Size = new System.Drawing.Size(113, 17);
-            this.syncCheckBox.TabIndex = 21;
-            this.syncCheckBox.Text = "Sync with subtitles";
-            this.syncCheckBox.UseVisualStyleBackColor = true;
-            this.syncCheckBox.Visible = false;
-            this.syncCheckBox.Click += new System.EventHandler(this.syncCheckBox_Click);
+            this.syncSubsCheckBox.AutoSize = true;
+            this.syncSubsCheckBox.Enabled = false;
+            this.syncSubsCheckBox.Location = new System.Drawing.Point(370, 129);
+            this.syncSubsCheckBox.Name = "syncSubsCheckBox";
+            this.syncSubsCheckBox.Size = new System.Drawing.Size(221, 17);
+            this.syncSubsCheckBox.TabIndex = 22;
+            this.syncSubsCheckBox.Text = "Sync sounds with randomized subs (beta)";
+            this.syncSubsCheckBox.UseVisualStyleBackColor = true;
+            this.syncSubsCheckBox.Click += new System.EventHandler(this.syncSubsCheckBox_Click);
             // 
             // subtitlesCheckBox
             // 
             this.subtitlesCheckBox.AutoSize = true;
             this.subtitlesCheckBox.Location = new System.Drawing.Point(298, 129);
             this.subtitlesCheckBox.Name = "subtitlesCheckBox";
-            this.subtitlesCheckBox.Size = new System.Drawing.Size(156, 17);
+            this.subtitlesCheckBox.Size = new System.Drawing.Size(66, 17);
             this.subtitlesCheckBox.TabIndex = 20;
-            this.subtitlesCheckBox.Text = "Subtitles (beta, might crash)";
+            this.subtitlesCheckBox.Text = "Subtitles";
             this.subtitlesCheckBox.UseVisualStyleBackColor = true;
+            this.subtitlesCheckBox.Click += new System.EventHandler(this.subtitlesCheckBox_Click);
             // 
             // animationsHardCorruptionCheckBox
             // 
@@ -887,12 +887,12 @@ namespace facade_editor
         private System.Windows.Forms.CheckBox godModeCheckbox;
         private System.Windows.Forms.CheckBox subtitlesCheckBox;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.CheckBox syncCheckBox;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.CheckBox fixLoadingCheckBox;
         private System.Windows.Forms.CheckBox skipIntroCheckBox;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.CheckBox spawnInTheRoomCheckBox;
+        private System.Windows.Forms.CheckBox syncSubsCheckBox;
     }
 }
 
